@@ -1,4 +1,4 @@
-package com.example.security.jwt.service;
+package com.example.security.jwt.security;
 
 import com.example.security.jwt.entity.User;
 import com.example.security.jwt.repository.UserRepository;
