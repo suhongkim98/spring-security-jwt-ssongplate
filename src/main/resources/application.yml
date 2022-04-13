@@ -20,4 +20,10 @@ spring:
       hibernate:
         format_sql: true
 
-    defer-datasource-initialization: true # hibernate? ???? ? data.sql ? ????? ??
+    defer-datasource-initialization: true # hibernate ? ??? ??? ? data.sql ? ????? ??.
+
+jwt:
+  header: Authorization
+  secret: asdajdhdfsdjhfsjdhfsjhdfsjdhfwueryywuyereuwyrqwehqwjehqjklklklklklklklklklklklkwehqjwhdzjhcjzxchzjxchasd
+  access-token-validity-in-seconds: 600 # 10 min
+  refresh-token-validity-in-seconds: 86400 # 24 hour # ??? ?? ?? ? 1?
