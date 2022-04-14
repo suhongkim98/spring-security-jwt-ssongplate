@@ -6,16 +6,13 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "account")
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Account {
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
@@ -25,6 +22,9 @@ public class User {
     @Column(name = "password", length = 100)
     private String password;
 
+    @Column(name = "token_weight")
+    private Long tokenWeight; // 리프레시 토큰 가중치, // 리프레시 토큰 안에 기입된 가중치가 tokenWeight 보다 작을경우 해당 토큰은 유효하지않음
+
     @Column(name = "nickname", length = 50)
     private String nickname;
 
@@ -33,8 +33,18 @@ public class User {
 
     @ManyToMany
     @JoinTable( // JoinTable은 테이블과 테이블 사이에 별도의 조인 테이블을 만들어 양 테이블간의 연관관계를 설정 하는 방법
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            name = "account_authority",
+            joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
+
+    @Builder
+    public Account(String username, String password, String nickname, Set<Authority> authorities, boolean activated) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.authorities = authorities;
+        this.activated = activated;
+        this.tokenWeight = 1L; // 초기 가중치는 1
+    }
 }
