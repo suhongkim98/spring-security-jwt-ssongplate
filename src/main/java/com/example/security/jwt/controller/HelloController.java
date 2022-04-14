@@ -4,9 +4,10 @@ import com.example.security.jwt.controller.dto.ResponseUser;
 import com.example.security.jwt.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -31,10 +32,14 @@ public class HelloController {
     }
 
     // 인가 테스트
-    // authorization: Bearer {AccessToken}
+    // Authorization: Bearer {AccessToken}
+    // @AuthenticationPrincipal를 통해 JwtFilter에서 토큰을 검증하며 등록한 시큐리티 유저 객체를 꺼내올 수 있다.
+    // JwtFilter는 디비 조회를 하지 않기에 유저네임, 권한만 알 수 있음
+    // Account 엔티티에 대한 정보를 알고 싶으면 당연 디비 조회를 별도로 해야함
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
-    public ResponseEntity<ResponseUser.Info> getMyUserInfo(HttpServletRequest request) {
+    public ResponseEntity<ResponseUser.Info> getMyUserInfo(@AuthenticationPrincipal User user) {
+        System.out.println(user.getUsername() + " " + user.getAuthorities());
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
 

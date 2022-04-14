@@ -9,14 +9,14 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class AccountController {
+public class UserController {
     private final UserService userService;
 
-    public AccountController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // user 회원가입 API
+    // user 등록 API
     @PostMapping("/signup")
     public ResponseEntity<CommonResponse> signup(
             @Valid @RequestBody RequestUser.Register registerDto
