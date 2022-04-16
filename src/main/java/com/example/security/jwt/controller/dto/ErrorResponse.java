@@ -1,4 +1,4 @@
-package com.example.security.jwt.exception;
+package com.example.security.jwt.controller.dto;
 
 import lombok.Builder;
 import lombok.Getter;
