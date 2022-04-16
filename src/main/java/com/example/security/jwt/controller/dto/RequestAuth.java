@@ -22,4 +22,14 @@ public class RequestAuth {
         @Size(min = 5, max = 100)
         private String password;
     }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Refresh {
+        @NotNull
+        private String token;
+
+    }
 }

@@ -47,4 +47,8 @@ public class Account {
         this.activated = activated;
         this.tokenWeight = 1L; // 초기 가중치는 1
     }
+
+    public void increaseTokenWeight() {
+        this.tokenWeight++;
+    }
 }

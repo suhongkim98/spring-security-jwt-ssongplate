@@ -1,7 +1,7 @@
 package com.example.security.jwt.security.handler;
 
 import com.example.security.jwt.controller.dto.CommonResponse;
-import com.example.security.jwt.exception.ErrorResponse;
+import com.example.security.jwt.controller.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

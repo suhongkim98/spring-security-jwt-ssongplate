@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 // 리프레시 토큰 생성, 검증
-// TokenProvider 기능을 확장해서 가중치 삽입, 가중치 검사기능 포함
+// TokenProvider 기능을 확장
 // 토큰 생성 시 가중치를 클레임에 넣는다.
-// 토큰 검증 시 유저 가중치 > 토큰 가중치라면 토큰은 유효하지 않다.
+// 토큰 검증 시 유저 가중치 > 리프레시 토큰 가중치라면 리프레시 토큰은 유효하지 않다.
+
 public class RefreshTokenProvider extends TokenProvider {
     private static final String WEIGHT_KEY = "token-weight";
 
@@ -36,21 +37,9 @@ public class RefreshTokenProvider extends TokenProvider {
                 .compact();
     }
 
-    // 토큰의 유효성을 검사하며 가중치도 검사
-    public boolean validateToken(String token, long weight) {
-        try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            if(weight > (long)claims.get(WEIGHT_KEY)) return false; // 가중치 검사
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            logger.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            logger.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
+    public long getTokenWeight(String token) {
+        // 토큰에서 가중치를 꺼내 반환한다.
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Long.valueOf(String.valueOf(claims.get(WEIGHT_KEY)));
     }
 }

@@ -1,6 +1,9 @@
 package com.example.security.jwt.service;
 
 import com.example.security.jwt.controller.dto.ResponseAuth;
+import com.example.security.jwt.entity.Account;
+import com.example.security.jwt.exception.error.InvalidRefreshTokenException;
+import com.example.security.jwt.repository.AccountRepository;
 import com.example.security.jwt.security.RefreshTokenProvider;
 import com.example.security.jwt.security.TokenProvider;
 import com.example.security.jwt.security.AccountAdapter;
@@ -8,18 +11,22 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AccountRepository accountRepository;
 
-    public AuthService(TokenProvider tokenProvider, RefreshTokenProvider refreshTokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthService(TokenProvider tokenProvider, RefreshTokenProvider refreshTokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, AccountRepository accountRepository) {
         this.tokenProvider = tokenProvider;
         this.refreshTokenProvider = refreshTokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.accountRepository = accountRepository;
     }
 
     // username 과 패스워드로 사용자를 인증하여 액세스토큰과 리프레시 토큰을 반환한다.
@@ -48,4 +55,33 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public ResponseAuth.Token refreshToken(String refreshToken) {
+        // 먼저 리프레시 토큰을 검증한다.
+        if(!refreshTokenProvider.validateToken(refreshToken)) throw new InvalidRefreshTokenException();
+
+        // 리프레시 토큰 값을 이용해 사용자를 꺼낸다.
+        // refreshTokenProvider과 TokenProvider는 다른 서명키를 가지고 있기에 refreshTokenProvider를 써야함
+        Authentication authentication = refreshTokenProvider.getAuthentication(refreshToken);
+        Account account = accountRepository.findOneWithAuthoritiesByUsername(authentication.getName())
+                .orElseThrow(()-> new UsernameNotFoundException(authentication.getName() + "을 찾을 수 없습니다"));
+        // 사용자 디비 값에 있는 것과 가중치 비교, 디비 가중치가 더 크다면 유효하지 않음
+        if(account.getTokenWeight() > refreshTokenProvider.getTokenWeight(refreshToken)) throw new InvalidRefreshTokenException();
+
+        // 리프레시 토큰에 담긴 값을 그대로 액세스 토큰 생성에 활용한다.
+        String accessToken = tokenProvider.createToken(authentication);
+        // 기존 리프레시 토큰과 새로 만든 액세스 토큰을 반환한다.
+        return ResponseAuth.Token.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    // Account 가중치를 1 올림으로써 해당 username 리프레시토큰 무효화
+    @Transactional
+    public void invalidateRefreshTokenByUsername(String username) {
+        Account account = accountRepository.findOneWithAuthoritiesByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + "-> 찾을 수 없습니다"));
+        account.increaseTokenWeight(); // 더티체킹에 의해 엔티티 변화 반영
+    }
 }
