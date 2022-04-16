@@ -82,7 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/hello").permitAll() // /api/hello
                 .antMatchers("/api/authenticate").permitAll() // 로그인 경로
-                .antMatchers("/api/signup").permitAll() // 회원가입 경로는 인증없이 호출 가능
+                .antMatchers("/api/user/signup").permitAll() // 회원가입 경로는 인증없이 호출 가능
+                .antMatchers("/api/token/refresh").permitAll() // 토큰 갱신 API 도 인증 없이 호출
 
                 .anyRequest().authenticated() // 나머지 경로는 jwt 인증 해야함
 

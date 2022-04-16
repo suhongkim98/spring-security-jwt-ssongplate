@@ -17,7 +17,7 @@ public class UserController {
     }
 
     // user 등록 API
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<CommonResponse> signup(
             @Valid @RequestBody RequestUser.Register registerDto
     ) {
