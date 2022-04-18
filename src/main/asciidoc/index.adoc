@@ -1,0 +1,14 @@
+= RESTful Notes API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectlinks:
+:sectanchors:
+
+== My Api Docs
+API 명세서 index.html이다.
+
+include::user-register.adoc[]
