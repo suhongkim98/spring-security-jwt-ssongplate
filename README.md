@@ -1,7 +1,20 @@
 # spring-security-jwt-ssongplate
 
-Spring Security + JWT를 활용한 인증 인가 템플릿입니다.
+Spring Security + JWT를 활용한 인증 인가 템플릿입니다.<br/>
+spring REST Docs를 통해 API 문서화가 되어있습니다.
 
+### Maven Build
+```bash
+./mvnw clean package
+```
+### Maven Run
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8080'
+```
+### spring REST Docs 접속
+```
+http://localhost:8080/docs/index.html
+```
 
 ### 유저 회원가입 API
 ```
