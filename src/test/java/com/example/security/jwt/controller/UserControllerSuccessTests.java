@@ -14,12 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 //@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com") // (1)
-public class AuthControllerTests {
+public class UserControllerSuccessTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -36,16 +35,16 @@ public class AuthControllerTests {
 
     @Test
     @DisplayName("유저 회원가입 테스트")
-    public void registerUserTest() throws Exception{
+    void registerUserTest() throws Exception{
         Map<String, String> input = new HashMap<>();
         input.put("username", "member1");
         input.put("password", "member1");
         input.put("nickname", "member1_nickname");
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/user/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(input))
-        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                )
                 .andExpect(status().isOk())
                 .andDo(print())
                 // rest docs 문서화
