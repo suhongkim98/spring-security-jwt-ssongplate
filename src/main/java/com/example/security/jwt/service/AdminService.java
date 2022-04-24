@@ -1,6 +1,8 @@
 package com.example.security.jwt.service;
 
+import com.example.security.jwt.controller.dto.RequestAdmin;
 import com.example.security.jwt.controller.dto.RequestUser;
+import com.example.security.jwt.controller.dto.ResponseAdmin;
 import com.example.security.jwt.controller.dto.ResponseUser;
 import com.example.security.jwt.entity.Account;
 import com.example.security.jwt.entity.Authority;
@@ -26,7 +28,7 @@ public class AdminService {
 
     // 회원가입 메서드
     @Transactional
-    public ResponseUser.Info signup(RequestUser.Register registerDto) {
+    public ResponseAdmin.Info signup(RequestAdmin.Register registerDto) {
         if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.getUsername()).orElseGet(()->null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
@@ -46,6 +48,6 @@ public class AdminService {
                 .build();
 
         // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다. 원랜 당연히 보내면 안댐
-        return ResponseUser.Info.of(accountRepository.save(user));
+        return ResponseAdmin.Info.of(accountRepository.save(user));
     }
 }
