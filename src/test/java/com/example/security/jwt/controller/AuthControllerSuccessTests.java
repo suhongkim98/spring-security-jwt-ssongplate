@@ -1,7 +1,9 @@
 package com.example.security.jwt.controller;
 
+import com.example.security.jwt.controller.dto.RequestAdmin;
 import com.example.security.jwt.controller.dto.RequestUser;
 import com.example.security.jwt.controller.dto.ResponseAuth;
+import com.example.security.jwt.service.AdminService;
 import com.example.security.jwt.service.AuthService;
 import com.example.security.jwt.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,11 +26,10 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -44,6 +45,8 @@ public class AuthControllerSuccessTests {
     private UserService userService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private AdminService adminService;
 
     @BeforeAll
     void beforeAll() {
@@ -57,6 +60,11 @@ public class AuthControllerSuccessTests {
                 .nickname("두식이")
                 .username("dusik")
                 .password("dusikpassword")
+                .build());
+        adminService.signup(RequestAdmin.Register.builder()
+                        .nickname("나야어드민")
+                        .username("honghong")
+                        .password("hongpassword")
                 .build());
     }
 
@@ -122,5 +130,33 @@ public class AuthControllerSuccessTests {
                 ))
                 .andExpect(jsonPath("$.response.accessToken", is(notNullValue())))
                 .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())));
+    }
+    @Test
+    @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
+    void invalidateRefreshTokenTest() throws Exception {
+        // given
+        ResponseAuth.Token token = authService.authenticate("honghong", "hongpassword");
+        String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
+
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/token/refresh/{username}", targetUsername)
+                        .header("Authorization", "bearer " + token.getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                // rest docs 문서화
+                .andDo(document("account-token-invalidate",
+                        pathParameters(
+                                parameterWithName("username").description("만료시키고자 하는 계정 username")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                                fieldWithPath("dateTime").description("response time"),
+                                fieldWithPath("success").description("정상 응답 여부"),
+                                fieldWithPath("response").description("null"),
+                                fieldWithPath("error").description("error 발생 시 에러 정보")
+                        )
+                ))
+                .andExpect(jsonPath("$.success", "true").exists());
     }
 }
