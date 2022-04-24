@@ -1,0 +1,15 @@
+[[api]]
+== 사용자 인증(Account Authenticate API)
+리프레시 토큰을 활용하여 액세스 토큰을 갱신하기위한 API입니다.
+
+====== 요청 형식
+include::{snippets}/account-token-refresh/http-request.adoc[]
+====== Request Body
+include::{snippets}/account-token-refresh/request-body.adoc[]
+====== 응답 형식
+include::{snippets}/account-token-refresh/http-response.adoc[]
+include::{snippets}/account-token-refresh/response-fields.adoc[]
+====== Response Body
+include::{snippets}/account-token-refresh/response-body.adoc[]
+====== Try with curl
+include::{snippets}/account-token-refresh/curl-request.adoc[]

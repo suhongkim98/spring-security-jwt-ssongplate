@@ -12,3 +12,7 @@
 API 명세서 index.html이다.
 
 include::user-register.adoc[]
+include::account-authenticate.adoc[]
+include::account-token-refresh.adoc[]
+
+
