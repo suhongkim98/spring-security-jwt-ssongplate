@@ -81,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // spring rest docs 경로
                 .and()
                 .authorizeRequests()
-                .antMatchers("/docs/*").permitAll()
+                .antMatchers("/docs/*").permitAll() // 문서 접근 권한을 설정합니다.
 
                 // api 경로
                 .and()
