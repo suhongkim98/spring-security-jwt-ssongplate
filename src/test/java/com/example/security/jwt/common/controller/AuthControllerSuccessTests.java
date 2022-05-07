@@ -1,10 +1,10 @@
 package com.example.security.jwt.common.controller;
 
 import com.example.security.jwt.admin.dto.RequestAdmin;
-import com.example.security.jwt.user.dto.RequestUser;
-import com.example.security.jwt.common.dto.ResponseAuth;
 import com.example.security.jwt.admin.service.AdminService;
 import com.example.security.jwt.common.service.AuthService;
+import com.example.security.jwt.user.dto.RequestUser;
+import com.example.security.jwt.common.dto.ResponseAuth;
 import com.example.security.jwt.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
