@@ -20,3 +20,7 @@ CREATE TABLE account_authority (
     FOREIGN KEY (account_id) REFERENCES account (account_id),
     FOREIGN KEY (authority_name) REFERENCES authority (authority_name)
 );
+
+/* 초기 필수 권한 */
+INSERT INTO AUTHORITY (AUTHORITY_NAME) values ('ROLE_USER');
+INSERT INTO AUTHORITY (AUTHORITY_NAME) values ('ROLE_ADMIN');

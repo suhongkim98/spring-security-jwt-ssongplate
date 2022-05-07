@@ -13,7 +13,7 @@ spring:
   flyway:
     enabled: true
     baselineOnMigrate: true
-    locations: classpath:db/migration/{vendor},classpath:db/seed/essential,classpath:db/seed/local # when you want to give test seed, add location test seed too
+    locations: classpath:db/migration/{vendor},classpath:db/seed/local # when you want to give test seed, add location test seed too
 
   jpa:
     show-sql: true
