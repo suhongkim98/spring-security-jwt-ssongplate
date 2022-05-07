@@ -85,6 +85,15 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+		<!-- flyway 버전이 DB를 지원하는지 확인할 것 -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>8.5.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
