@@ -1,7 +1,8 @@
 # spring-security-jwt-ssongplate
 
-Spring Security + JWT를 활용한 인증 인가 템플릿입니다.<br/>
-spring REST Docs를 통해 API 문서화가 되어있습니다.
+`Spring Security` + `JWT`를 활용한 인증 인가 템플릿입니다.<br/>
+`spring REST Docs`를 통해 API 문서화가 되어있습니다.<br/>
+`flyway` DB 마이그레이션 도구를 사용합니다.
 
 ### Maven Build
 ```bash
