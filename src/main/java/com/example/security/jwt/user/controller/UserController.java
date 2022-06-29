@@ -1,6 +1,6 @@
 package com.example.security.jwt.user.controller;
 
-import com.example.security.jwt.common.dto.CommonResponse;
+import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.user.service.UserService;
 import com.example.security.jwt.user.dto.RequestUser;
 import com.example.security.jwt.user.dto.ResponseUser;

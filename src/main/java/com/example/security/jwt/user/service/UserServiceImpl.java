@@ -4,11 +4,11 @@ package com.example.security.jwt.user.service;
 
 import com.example.security.jwt.user.dto.RequestUser;
 import com.example.security.jwt.user.dto.ResponseUser;
-import com.example.security.jwt.common.domain.Account;
-import com.example.security.jwt.common.domain.Authority;
+import com.example.security.jwt.auth.domain.Account;
+import com.example.security.jwt.auth.domain.Authority;
 import com.example.security.jwt.exception.error.DuplicateMemberException;
-import com.example.security.jwt.common.repository.AccountRepository;
-import com.example.security.jwt.common.security.util.SecurityUtil;
+import com.example.security.jwt.auth.repository.AccountRepository;
+import com.example.security.jwt.global.security.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

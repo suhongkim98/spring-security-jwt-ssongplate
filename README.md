@@ -10,14 +10,14 @@
 ```
 ### Maven Run
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8080'
+./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8080' -Dspring-boot.run.profiles=local
 ```
 ### spring REST Docs 접속
 ```
 http://localhost:8080/docs/index.html
 ```
 
-### 유저 회원가입 API
+### 일반 유저 등록 API
 ```
 POST /api/user/signup
 ```
