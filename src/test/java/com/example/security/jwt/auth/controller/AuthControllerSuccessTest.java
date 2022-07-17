@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 //@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com") // (1)
-public class AuthControllerSuccessTests {
+public class AuthControllerSuccessTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
