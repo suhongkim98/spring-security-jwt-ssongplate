@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,29 +78,30 @@ public class AuthControllerSuccessTest {
         input.put("username", "dusik");
         input.put("password", "dusikpassword");
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/authenticate")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isOk())
-                .andDo(print())
-                // rest docs 문서화
-                .andDo(document("account-authenticate",
-                        requestFields(
-                                fieldWithPath("username").description("인증 하고자 하는 username"),
-                                fieldWithPath("password").description("인증 하고자 하는 password")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
-                                fieldWithPath("dateTime").description("response time"),
-                                fieldWithPath("success").description("정상 응답 여부"),
-                                fieldWithPath("response.accessToken").description("액세스 토큰"),
-                                fieldWithPath("response.refreshToken").description("리프레시 토큰"),
-                                fieldWithPath("error").description("error 발생 시 에러 정보")
-                        )
-                ))
                 .andExpect(jsonPath("$.response.accessToken", is(notNullValue())))
-                .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())));
+                .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())))
+                .andDo(print());
+
+        // rest docs 문서화
+        actions.andDo(document("account-authenticate",
+                requestFields(
+                        fieldWithPath("username").description("인증 하고자 하는 username"),
+                        fieldWithPath("password").description("인증 하고자 하는 password")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                        fieldWithPath("dateTime").description("response time"),
+                        fieldWithPath("success").description("정상 응답 여부"),
+                        fieldWithPath("response.accessToken").description("액세스 토큰"),
+                        fieldWithPath("response.refreshToken").description("리프레시 토큰"),
+                        fieldWithPath("error").description("error 발생 시 에러 정보")
+                )
+        ));
     }
 
     @Test
@@ -110,28 +112,29 @@ public class AuthControllerSuccessTest {
         Map<String, Object> input = new HashMap<>();
         input.put("token", token.getRefreshToken());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/token/refresh")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/token/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isOk())
-                .andDo(print())
-                // rest docs 문서화
-                .andDo(document("account-token-refresh",
-                        requestFields(
-                                fieldWithPath("token").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
-                                fieldWithPath("dateTime").description("response time"),
-                                fieldWithPath("success").description("정상 응답 여부"),
-                                fieldWithPath("response.accessToken").description("액세스 토큰"),
-                                fieldWithPath("response.refreshToken").description("리프레시 토큰"),
-                                fieldWithPath("error").description("error 발생 시 에러 정보")
-                        )
-                ))
                 .andExpect(jsonPath("$.response.accessToken", is(notNullValue())))
-                .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())));
+                .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())))
+                .andDo(print());
+        // rest docs 문서화
+        actions.andDo(document("account-token-refresh",
+                requestFields(
+                        fieldWithPath("token").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                        fieldWithPath("dateTime").description("response time"),
+                        fieldWithPath("success").description("정상 응답 여부"),
+                        fieldWithPath("response.accessToken").description("액세스 토큰"),
+                        fieldWithPath("response.refreshToken").description("리프레시 토큰"),
+                        fieldWithPath("error").description("error 발생 시 에러 정보")
+                )
+        ));
+
     }
     @Test
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
@@ -140,25 +143,27 @@ public class AuthControllerSuccessTest {
         ResponseAuth.Token token = authService.authenticate("honghong", "hongpassword");
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/token/refresh/{username}", targetUsername)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/auth/token/refresh/{username}", targetUsername)
                         .header("Authorization", "bearer " + token.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andDo(print())
-                // rest docs 문서화
-                .andDo(document("account-token-invalidate",
-                        pathParameters(
-                                parameterWithName("username").description("만료시키고자 하는 계정 username")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
-                                fieldWithPath("dateTime").description("response time"),
-                                fieldWithPath("success").description("정상 응답 여부"),
-                                fieldWithPath("response").description("null"),
-                                fieldWithPath("error").description("error 발생 시 에러 정보")
-                        )
-                ))
-                .andExpect(jsonPath("$.success", "true").exists());
+                .andExpect(jsonPath("$.success", "true").exists())
+                .andDo(print());
+
+        // rest docs 문서화
+        actions.andDo(document("account-token-invalidate",
+                pathParameters(
+                        parameterWithName("username").description("만료시키고자 하는 계정 username")
+                ),
+                responseFields(
+                        fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
+                        fieldWithPath("dateTime").description("response time"),
+                        fieldWithPath("success").description("정상 응답 여부"),
+                        fieldWithPath("response").description("null"),
+                        fieldWithPath("error").description("error 발생 시 에러 정보")
+                )
+        ));
+
     }
 }

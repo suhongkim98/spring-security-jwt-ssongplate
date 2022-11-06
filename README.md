@@ -34,7 +34,7 @@ POST /api/user/signup
 
 ### 계정 인증 API
 ```
-POST /api/authenticate
+POST /api/auth/authenticate
 ```
 #### request
 ```
@@ -48,7 +48,7 @@ POST /api/authenticate
 
 ### 액세스 토큰 갱신 API
 ```
-POST /api/token/refresh
+POST /api/auth/token/refresh
 ```
 #### request
 ```
@@ -62,7 +62,7 @@ POST /api/token/refresh
 ### 리프레시 토큰 무효화 API
 호출자의 `ROLE_ADMIN` 권한 보유여부 확인
 ```
-DELETE /api/token/refresh/{username}
+DELETE /api/auth/token/refresh/{username}
 ```
 * 해당 `username`의 토큰 가중치를 1 증가시킴으로써 이전에 발급된 해당 `username`에 대한 모든 리프레시 토큰 무효화
 
