@@ -2,7 +2,7 @@ package com.example.security.jwt.auth.service;
 
 import com.example.security.jwt.auth.dto.ResponseAuth;
 import com.example.security.jwt.auth.domain.Account;
-import com.example.security.jwt.exception.error.InvalidRefreshTokenException;
+import com.example.security.jwt.global.exception.error.InvalidRefreshTokenException;
 import com.example.security.jwt.auth.repository.AccountRepository;
 import com.example.security.jwt.global.security.RefreshTokenProvider;
 import com.example.security.jwt.global.security.TokenProvider;

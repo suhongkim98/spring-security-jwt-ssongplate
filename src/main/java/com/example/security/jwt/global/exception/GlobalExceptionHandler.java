@@ -1,9 +1,9 @@
-package com.example.security.jwt.exception;
+package com.example.security.jwt.global.exception;
 
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.global.dto.ErrorResponse;
-import com.example.security.jwt.exception.error.DuplicateMemberException;
-import com.example.security.jwt.exception.error.InvalidRefreshTokenException;
+import com.example.security.jwt.global.exception.error.DuplicateMemberException;
+import com.example.security.jwt.global.exception.error.InvalidRefreshTokenException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

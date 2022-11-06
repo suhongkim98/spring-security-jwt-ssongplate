@@ -1,6 +1,6 @@
-package com.example.security.jwt.exception.error;
+package com.example.security.jwt.global.exception.error;
 
-import com.example.security.jwt.exception.ErrorCode;
+import com.example.security.jwt.global.exception.ErrorCode;
 
 public class InvalidRefreshTokenException extends RuntimeException {
     public InvalidRefreshTokenException(){

@@ -4,7 +4,7 @@ import com.example.security.jwt.admin.dto.RequestAdmin;
 import com.example.security.jwt.admin.dto.ResponseAdmin;
 import com.example.security.jwt.auth.domain.Account;
 import com.example.security.jwt.auth.domain.Authority;
-import com.example.security.jwt.exception.error.DuplicateMemberException;
+import com.example.security.jwt.global.exception.error.DuplicateMemberException;
 import com.example.security.jwt.auth.repository.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

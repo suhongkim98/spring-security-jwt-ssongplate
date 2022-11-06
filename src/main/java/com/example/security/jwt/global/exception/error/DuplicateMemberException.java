@@ -1,4 +1,4 @@
-package com.example.security.jwt.exception.error;
+package com.example.security.jwt.global.exception.error;
 
 public class DuplicateMemberException extends RuntimeException {
     public DuplicateMemberException() {
