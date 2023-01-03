@@ -33,13 +33,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 //@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com") // (1)
-public class AuthControllerSuccessTest {
+public class AuthControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
