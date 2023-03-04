@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1")
 public class AuthController {
     private final AuthService authService;
 
@@ -23,7 +23,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/authenticate") // Account 인증 API
+    @PostMapping("/auth/authenticate") // Account 인증 API
     public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody RequestAuth.Login loginDto) {
 
         ResponseAuth.Token token = authService.authenticate(loginDto.getUsername(), loginDto.getPassword());
@@ -41,7 +41,7 @@ public class AuthController {
         return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/token/refresh") // 리프레시 토큰을 활용한 액세스 토큰 갱신
+    @PostMapping("/auth/token/refresh") // 리프레시 토큰을 활용한 액세스 토큰 갱신
     public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAuth.Refresh refreshDto) {
 
         ResponseAuth.Token token = authService.refreshToken(refreshDto.getToken());
@@ -61,7 +61,7 @@ public class AuthController {
 
     //리프레시토큰 만료 API
     //-> 해당 계정의 가중치를 1 올린다. 그럼 나중에 해당 리프레시 토큰으로 갱신 요청이 들어와도 받아들여지지 않음
-    @DeleteMapping("/token/refresh/{username}")
+    @DeleteMapping("/auth/token/refresh/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
     public ResponseEntity<CommonResponse> authorize(@PathVariable String username) {
         authService.invalidateRefreshTokenByUsername(username);

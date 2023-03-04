@@ -78,7 +78,7 @@ public class AuthControllerIntegrationTest {
         input.put("username", "dusik");
         input.put("password", "dusikpassword");
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/authenticate")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
@@ -112,7 +112,7 @@ public class AuthControllerIntegrationTest {
         Map<String, Object> input = new HashMap<>();
         input.put("token", token.getRefreshToken());
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/auth/token/refresh")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/token/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
@@ -143,7 +143,7 @@ public class AuthControllerIntegrationTest {
         ResponseAuth.Token token = authService.authenticate("honghong", "hongpassword");
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/auth/token/refresh/{username}", targetUsername)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/auth/token/refresh/{username}", targetUsername)
                         .header("Authorization", "bearer " + token.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
