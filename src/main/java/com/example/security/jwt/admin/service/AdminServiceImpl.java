@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
                 .authorityName("ROLE_ADMIN")
                 .build();
 
-        Account user = Account.builder()
+        Account member = Account.builder()
                 .username(registerDto.getUsername())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
                 .nickname(registerDto.getNickname())
@@ -47,6 +47,6 @@ public class AdminServiceImpl implements AdminService {
                 .build();
 
         // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다. 원랜 당연히 보내면 안댐
-        return ResponseAdmin.Info.of(accountRepository.save(user));
+        return ResponseAdmin.Info.of(accountRepository.save(member));
     }
 }

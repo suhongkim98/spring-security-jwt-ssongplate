@@ -19,7 +19,7 @@ http://localhost:8080/docs/index.html
 
 ### 일반 유저 등록 API
 ```
-POST /api/user/signup
+POST /api/v1/member
 ```
 #### request
 ```
@@ -29,7 +29,7 @@ POST /api/user/signup
     nickname: String
 }
 ```
-* `ROLE_USER` 권한을 부여하여 `Account` 생성
+* `ROLE_MEMBER` 권한을 부여하여 `Account` 생성
 * 리프레시 토큰의 초기 가중치는 1로 설정
 
 ### 계정 인증 API

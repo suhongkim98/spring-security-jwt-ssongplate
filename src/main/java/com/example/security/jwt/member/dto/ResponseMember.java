@@ -1,4 +1,4 @@
-package com.example.security.jwt.user.dto;
+package com.example.security.jwt.member.dto;
 
 import com.example.security.jwt.auth.domain.Account;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ResponseUser {
+public class ResponseMember {
     @Builder
     @Data
     @NoArgsConstructor
@@ -21,10 +21,10 @@ public class ResponseUser {
         private Long tokenWeight;
         private Set<String> authoritySet;
 
-        public static ResponseUser.Info of(Account account) {
+        public static ResponseMember.Info of(Account account) {
             if(account == null) return null;
 
-            return ResponseUser.Info.builder()
+            return ResponseMember.Info.builder()
                     .username(account.getUsername())
                     .password(account.getPassword())
                     .nickname(account.getNickname())

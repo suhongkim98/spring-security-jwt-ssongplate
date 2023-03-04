@@ -3,9 +3,9 @@ package com.example.security.jwt.auth.controller;
 import com.example.security.jwt.admin.dto.RequestAdmin;
 import com.example.security.jwt.admin.service.AdminService;
 import com.example.security.jwt.auth.service.AuthService;
-import com.example.security.jwt.user.dto.RequestUser;
+import com.example.security.jwt.member.dto.RequestMember;
 import com.example.security.jwt.auth.dto.ResponseAuth;
-import com.example.security.jwt.user.service.UserService;
+import com.example.security.jwt.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ public class AuthControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private UserService userService;
+    private MemberService memberService;
     @Autowired
     private AuthService authService;
     @Autowired
@@ -54,12 +54,12 @@ public class AuthControllerIntegrationTest {
     @BeforeAll
     void beforeAll() {
         // 회원 생성
-        userService.signup(RequestUser.Register.builder()
+        memberService.signup(RequestMember.Register.builder()
                         .nickname("길동이")
                         .username("gildong")
                         .password("gildongspassword")
                 .build());
-        userService.signup(RequestUser.Register.builder()
+        memberService.signup(RequestMember.Register.builder()
                 .nickname("두식이")
                 .username("dusik")
                 .password("dusikpassword")

@@ -1,7 +1,7 @@
 package com.example.security.jwt.auth.controller;
 
-import com.example.security.jwt.user.dto.ResponseUser;
-import com.example.security.jwt.user.service.UserService;
+import com.example.security.jwt.member.dto.ResponseMember;
+import com.example.security.jwt.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,10 +14,10 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 public class HelloController {
-    private final UserService userService;
+    private final MemberService memberService;
 
-    public HelloController(UserService userService) {
-        this.userService = userService;
+    public HelloController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping("/hello")
@@ -38,14 +38,14 @@ public class HelloController {
     // Account 엔티티에 대한 정보를 알고 싶으면 당연 디비 조회를 별도로 해야함
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
-    public ResponseEntity<ResponseUser.Info> getMyUserInfo(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ResponseMember.Info> getMyUserInfo(@AuthenticationPrincipal User user) {
         System.out.println(user.getUsername() + " " + user.getAuthorities());
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
+        return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
     }
 
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
-    public ResponseEntity<ResponseUser.Info> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+    public ResponseEntity<ResponseMember.Info> getUserInfo(@PathVariable String username) {
+        return ResponseEntity.ok(memberService.getUserWithAuthorities(username));
     }
 }

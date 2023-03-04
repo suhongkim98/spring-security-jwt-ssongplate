@@ -1,4 +1,4 @@
-package com.example.security.jwt.user.controller;
+package com.example.security.jwt.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 //@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com") // (1)
-public class UserControllerIntegrationTest {
+public class MemberControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -44,7 +44,7 @@ public class UserControllerIntegrationTest {
         input.put("password", "member1");
         input.put("nickname", "member1_nickname");
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/user/signup")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/member")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )

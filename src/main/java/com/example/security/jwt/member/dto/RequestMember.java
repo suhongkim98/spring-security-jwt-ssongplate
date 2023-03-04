@@ -1,4 +1,4 @@
-package com.example.security.jwt.user.dto;
+package com.example.security.jwt.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class RequestUser {
+public class RequestMember {
     @Builder
     @Data
     @NoArgsConstructor

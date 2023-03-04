@@ -1,6 +1,6 @@
-[[api-user-register]]
+[[api-memeber-register]]
 == 유저 사용자 등록(User Register API)
-ROLE_USER 권한을 가지는 사용자를 생성합니다.
+ROLE_MEMBER 권한을 가지는 사용자를 생성합니다.
 
 ====== 요청 형식
 include::{snippets}/user-register/http-request.adoc[]
