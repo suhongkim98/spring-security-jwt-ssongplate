@@ -35,7 +35,7 @@ POST /api/v1/member
 
 ### 계정 인증 API
 ```
-POST /api/auth/authenticate
+POST /api/v1/auth/authenticate
 ```
 #### request
 ```
@@ -49,7 +49,7 @@ POST /api/auth/authenticate
 
 ### 액세스 토큰, 리프레시 토큰 갱신 API
 ```
-PUT /api/auth/token
+PUT /api/v1/auth/token
 ```
 #### request
 ```
