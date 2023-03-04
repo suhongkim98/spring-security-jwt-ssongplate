@@ -13,7 +13,7 @@ public class RequestAuth {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Login {
+    public static class Authenticate {
         @NotNull
         @Size(min = 3, max = 50)
         private String username;
@@ -27,9 +27,9 @@ public class RequestAuth {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Refresh {
+    public static class RefreshToken {
         @NotNull
-        private String token;
+        private String refreshToken;
 
     }
 }

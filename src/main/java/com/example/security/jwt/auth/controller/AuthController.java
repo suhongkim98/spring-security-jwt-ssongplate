@@ -24,9 +24,9 @@ public class AuthController {
     }
 
     @PostMapping("/auth/authenticate") // Account 인증 API
-    public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody RequestAuth.Login loginDto) {
+    public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody RequestAuth.Authenticate loginDto) {
 
-        ResponseAuth.Token token = authService.authenticate(loginDto.getUsername(), loginDto.getPassword());
+        ResponseAuth.Token token = authService.authenticate(loginDto);
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -41,10 +41,10 @@ public class AuthController {
         return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/auth/token/refresh") // 리프레시 토큰을 활용한 액세스 토큰 갱신
-    public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAuth.Refresh refreshDto) {
+    @PutMapping("/auth/token") // 리프레시 토큰을 활용한 토큰 갱신
+    public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAuth.RefreshToken refreshTokenDto) {
 
-        ResponseAuth.Token token = authService.refreshToken(refreshDto.getToken());
+        ResponseAuth.Token token = authService.refreshToken(refreshTokenDto);
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -61,7 +61,7 @@ public class AuthController {
 
     //리프레시토큰 만료 API
     //-> 해당 계정의 가중치를 1 올린다. 그럼 나중에 해당 리프레시 토큰으로 갱신 요청이 들어와도 받아들여지지 않음
-    @DeleteMapping("/auth/token/refresh/{username}")
+    @DeleteMapping("/auth/token/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
     public ResponseEntity<CommonResponse> authorize(@PathVariable String username) {
         authService.invalidateRefreshTokenByUsername(username);

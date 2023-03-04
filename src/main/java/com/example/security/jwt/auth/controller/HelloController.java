@@ -36,7 +36,7 @@ public class HelloController {
     // @AuthenticationPrincipal를 통해 JwtFilter에서 토큰을 검증하며 등록한 시큐리티 유저 객체를 꺼내올 수 있다.
     // JwtFilter는 디비 조회를 하지 않기에 유저네임, 권한만 알 수 있음
     // Account 엔티티에 대한 정보를 알고 싶으면 당연 디비 조회를 별도로 해야함
-    @GetMapping("/user")
+    @GetMapping("/member")
     @PreAuthorize("hasAnyRole('MEMBER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
     public ResponseEntity<ResponseMember.Info> getMyUserInfo(@AuthenticationPrincipal User user) {
         System.out.println(user.getUsername() + " " + user.getAuthorities());

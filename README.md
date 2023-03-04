@@ -47,23 +47,23 @@ POST /api/auth/authenticate
 * `username`과 `password`를 통해 계정 인증
 * 해당 사용자 권한으로 액세스토큰 리프레시 토큰 반환
 
-### 액세스 토큰 갱신 API
+### 액세스 토큰, 리프레시 토큰 갱신 API
 ```
-POST /api/auth/token/refresh
+PUT /api/auth/token
 ```
 #### request
 ```
 {
-    token: String
+    refreshToken: String
 }
 ```
 * 리프레시 토큰을 검증(유효성, 리프레시 토큰 가중치)
-* 액세스 토큰 발급
+* 액세스 토큰, 리프레시 토큰 발급
 
 ### 리프레시 토큰 무효화 API
 호출자의 `ROLE_ADMIN` 권한 보유여부 확인
 ```
-DELETE /api/auth/token/refresh/{username}
+DELETE /api/auth/token/{username}
 ```
 * 해당 `username`의 토큰 가중치를 1 증가시킴으로써 이전에 발급된 해당 `username`에 대한 모든 리프레시 토큰 무효화
 

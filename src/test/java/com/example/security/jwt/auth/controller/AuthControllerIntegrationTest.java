@@ -2,6 +2,7 @@ package com.example.security.jwt.auth.controller;
 
 import com.example.security.jwt.admin.dto.RequestAdmin;
 import com.example.security.jwt.admin.service.AdminService;
+import com.example.security.jwt.auth.dto.RequestAuth;
 import com.example.security.jwt.auth.service.AuthService;
 import com.example.security.jwt.member.dto.RequestMember;
 import com.example.security.jwt.auth.dto.ResponseAuth;
@@ -105,14 +106,19 @@ public class AuthControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("액세스 토큰 갱신 테스트")
+    @DisplayName("토큰 갱신 테스트")
     void refreshTokenTest() throws Exception {
         // given
-        ResponseAuth.Token token = authService.authenticate("dusik", "dusikpassword");
-        Map<String, Object> input = new HashMap<>();
-        input.put("token", token.getRefreshToken());
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/token/refresh")
+        ResponseAuth.Token token = authService.authenticate(RequestAuth.Authenticate
+                .builder()
+                .username("dusik")
+                .password("dusikpassword")
+                .build());
+        Map<String, Object> input = new HashMap<>();
+        input.put("refreshToken", token.getRefreshToken());
+
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.put("/api/v1/auth/token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
@@ -123,7 +129,7 @@ public class AuthControllerIntegrationTest {
         // rest docs 문서화
         actions.andDo(document("account-token-refresh",
                 requestFields(
-                        fieldWithPath("token").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
+                        fieldWithPath("refreshToken").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
                 ),
                 responseFields(
                         fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
@@ -140,10 +146,14 @@ public class AuthControllerIntegrationTest {
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        ResponseAuth.Token token = authService.authenticate("honghong", "hongpassword");
+        ResponseAuth.Token token = authService.authenticate(RequestAuth.Authenticate
+                .builder()
+                .username("honghong")
+                .password("hongpassword")
+                .build());
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/auth/token/refresh/{username}", targetUsername)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/auth/token/{username}", targetUsername)
                         .header("Authorization", "bearer " + token.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
