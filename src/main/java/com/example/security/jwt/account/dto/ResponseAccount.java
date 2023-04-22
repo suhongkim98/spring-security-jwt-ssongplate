@@ -1,11 +1,12 @@
-package com.example.security.jwt.auth.dto;
+package com.example.security.jwt.account.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class ResponseAuth {
+public class ResponseAccount
+{
     @Builder
     @Data
     @NoArgsConstructor

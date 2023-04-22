@@ -1,4 +1,4 @@
-package com.example.security.jwt.auth.domain;
+package com.example.security.jwt.account.domain;
 
 import lombok.*;
 

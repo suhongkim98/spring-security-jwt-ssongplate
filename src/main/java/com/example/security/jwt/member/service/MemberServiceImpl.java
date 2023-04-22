@@ -1,14 +1,12 @@
 package com.example.security.jwt.member.service;
 
-// 회원가입, 유저정보 조회
-
+import com.example.security.jwt.account.domain.Account;
+import com.example.security.jwt.account.domain.Authority;
+import com.example.security.jwt.global.exception.error.DuplicateMemberException;
+import com.example.security.jwt.account.repository.AccountRepository;
+import com.example.security.jwt.global.security.util.SecurityUtil;
 import com.example.security.jwt.member.dto.RequestMember;
 import com.example.security.jwt.member.dto.ResponseMember;
-import com.example.security.jwt.auth.domain.Account;
-import com.example.security.jwt.auth.domain.Authority;
-import com.example.security.jwt.global.exception.error.DuplicateMemberException;
-import com.example.security.jwt.auth.repository.AccountRepository;
-import com.example.security.jwt.global.security.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

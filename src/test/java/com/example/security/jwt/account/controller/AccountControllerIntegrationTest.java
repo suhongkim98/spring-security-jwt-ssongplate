@@ -1,12 +1,11 @@
-package com.example.security.jwt.auth.controller;
+package com.example.security.jwt.account.controller;
 
 import com.example.security.jwt.admin.dto.RequestAdmin;
 import com.example.security.jwt.admin.service.AdminService;
-import com.example.security.jwt.auth.dto.RequestAuth;
-import com.example.security.jwt.auth.service.AuthService;
+import com.example.security.jwt.account.service.AccountService;
 import com.example.security.jwt.member.dto.RequestMember;
-import com.example.security.jwt.auth.dto.ResponseAuth;
 import com.example.security.jwt.member.service.MemberService;
+import com.example.security.jwt.account.dto.ResponseAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 //@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com") // (1)
-public class AuthControllerIntegrationTest {
+public class AccountControllerIntegrationTest
+{
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -48,7 +48,7 @@ public class AuthControllerIntegrationTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private AuthService authService;
+    private AccountService accountService;
     @Autowired
     private AdminService adminService;
 
@@ -79,7 +79,7 @@ public class AuthControllerIntegrationTest {
         input.put("username", "dusik");
         input.put("password", "dusikpassword");
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/auth/authenticate")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/accounts/token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
@@ -106,19 +106,14 @@ public class AuthControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("토큰 갱신 테스트")
+    @DisplayName("액세스 토큰 갱신 테스트")
     void refreshTokenTest() throws Exception {
         // given
-
-        ResponseAuth.Token token = authService.authenticate(RequestAuth.Authenticate
-                .builder()
-                .username("dusik")
-                .password("dusikpassword")
-                .build());
+        ResponseAccount.Token token = accountService.authenticate("dusik", "dusikpassword");
         Map<String, Object> input = new HashMap<>();
-        input.put("refreshToken", token.getRefreshToken());
+        input.put("token", token.getRefreshToken());
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.put("/api/v1/auth/token")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.put("/api/v1/accounts/token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )
@@ -129,7 +124,7 @@ public class AuthControllerIntegrationTest {
         // rest docs 문서화
         actions.andDo(document("account-token-refresh",
                 requestFields(
-                        fieldWithPath("refreshToken").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
+                        fieldWithPath("token").description("액세스 토큰 갱신에 사용되는 리프레시 토큰")
                 ),
                 responseFields(
                         fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
@@ -146,14 +141,10 @@ public class AuthControllerIntegrationTest {
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        ResponseAuth.Token token = authService.authenticate(RequestAuth.Authenticate
-                .builder()
-                .username("honghong")
-                .password("hongpassword")
-                .build());
+        ResponseAccount.Token token = accountService.authenticate("honghong", "hongpassword");
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/auth/token/{username}", targetUsername)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/accounts/{username}/token", targetUsername)
                         .header("Authorization", "bearer " + token.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )

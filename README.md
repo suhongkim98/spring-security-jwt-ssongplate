@@ -20,7 +20,7 @@ http://localhost:8080/docs/index.html
 
 ### 일반 유저 등록 API
 ```
-POST /api/v1/member
+POST /api/v1/members
 ```
 #### request
 ```
@@ -35,7 +35,7 @@ POST /api/v1/member
 
 ### 계정 인증 API
 ```
-POST /api/v1/auth/authenticate
+POST /api/v1/accounts/token
 ```
 #### request
 ```
@@ -49,7 +49,7 @@ POST /api/v1/auth/authenticate
 
 ### 액세스 토큰, 리프레시 토큰 갱신 API
 ```
-PUT /api/v1/auth/token
+PUT /api/v1/accounts/token
 ```
 #### request
 ```
@@ -63,7 +63,7 @@ PUT /api/v1/auth/token
 ### 리프레시 토큰 무효화 API
 호출자의 `ROLE_ADMIN` 권한 보유여부 확인
 ```
-DELETE /api/auth/token/{username}
+DELETE /api/v1/accounts/{username}/token
 ```
 * 해당 `username`의 토큰 가중치를 1 증가시킴으로써 이전에 발급된 해당 `username`에 대한 모든 리프레시 토큰 무효화
 

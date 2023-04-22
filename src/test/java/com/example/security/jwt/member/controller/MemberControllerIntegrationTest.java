@@ -44,7 +44,7 @@ public class MemberControllerIntegrationTest {
         input.put("password", "member1");
         input.put("nickname", "member1_nickname");
 
-        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/member")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                 )

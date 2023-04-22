@@ -1,4 +1,4 @@
-package com.example.security.jwt.global.config;
+package com.example.security.jwt.global.security.config;
 
 import com.example.security.jwt.global.security.RefreshTokenProvider;
 import com.example.security.jwt.global.security.TokenProvider;

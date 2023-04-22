@@ -1,6 +1,6 @@
-package com.example.security.jwt.auth.repository;
+package com.example.security.jwt.account.repository;
 
-import com.example.security.jwt.auth.domain.Account;
+import com.example.security.jwt.account.domain.Account;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

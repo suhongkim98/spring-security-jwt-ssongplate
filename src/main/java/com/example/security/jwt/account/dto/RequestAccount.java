@@ -1,4 +1,4 @@
-package com.example.security.jwt.auth.dto;
+package com.example.security.jwt.account.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class RequestAuth {
+public class RequestAccount
+{
     @Builder
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Authenticate {
+    public static class Login {
         @NotNull
         @Size(min = 3, max = 50)
         private String username;
@@ -27,9 +28,9 @@ public class RequestAuth {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RefreshToken {
+    public static class Refresh {
         @NotNull
-        private String refreshToken;
+        private String token;
 
     }
 }

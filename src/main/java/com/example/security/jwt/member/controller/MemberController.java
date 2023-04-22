@@ -19,7 +19,7 @@ public class MemberController {
     }
 
     // user 등록 API
-    @PostMapping("/member")
+    @PostMapping("/members")
     public ResponseEntity<CommonResponse> signup(
             @Valid @RequestBody RequestMember.Register registerDto
     ) {

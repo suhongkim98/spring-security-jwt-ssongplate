@@ -1,6 +1,6 @@
 package com.example.security.jwt.member.dto;
 
-import com.example.security.jwt.auth.domain.Account;
+import com.example.security.jwt.account.domain.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

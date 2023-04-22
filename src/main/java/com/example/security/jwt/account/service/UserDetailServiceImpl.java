@@ -1,7 +1,8 @@
-package com.example.security.jwt.global.security;
+package com.example.security.jwt.account.service;
 
-import com.example.security.jwt.auth.domain.Account;
-import com.example.security.jwt.auth.repository.AccountRepository;
+import com.example.security.jwt.account.domain.Account;
+import com.example.security.jwt.account.domain.AccountAdapter;
+import com.example.security.jwt.account.repository.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
     private final AccountRepository accountRepository;
 
-    public CustomUserDetailsService(AccountRepository accountRepository) {
+    public UserDetailServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
