@@ -145,7 +145,7 @@ public class AccountControllerIntegrationTest
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/accounts/{username}/token", targetUsername)
-                        .header("Authorization", "bearer " + token.getAccessToken())
+                        .header("Authorization", "Bearer " + token.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
