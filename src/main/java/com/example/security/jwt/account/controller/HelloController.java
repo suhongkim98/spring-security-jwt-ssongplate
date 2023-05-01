@@ -37,7 +37,7 @@ public class HelloController {
     // JwtFilter는 디비 조회를 하지 않기에 유저네임, 권한만 알 수 있음
     // Account 엔티티에 대한 정보를 알고 싶으면 당연 디비 조회를 별도로 해야함
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
+    @PreAuthorize("hasAnyRole('MEMBER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
     public ResponseEntity<ResponseMember.Info> getMyUserInfo(@AuthenticationPrincipal User user) {
         System.out.println(user.getUsername() + " " + user.getAuthorities());
         return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
