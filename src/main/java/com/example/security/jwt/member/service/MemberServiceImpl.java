@@ -18,10 +18,14 @@ import java.util.Collections;
 public class MemberServiceImpl implements MemberService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityUtil securityUtil;
 
-    public MemberServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public MemberServiceImpl(AccountRepository accountRepository,
+                             PasswordEncoder passwordEncoder,
+                             SecurityUtil securityUtil) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.securityUtil = securityUtil;
     }
 
     // 회원가입 메서드
@@ -61,6 +65,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     @Override
     public ResponseMember.Info getMyUserWithAuthorities() {
-        return ResponseMember.Info.of(SecurityUtil.getCurrentUsername().flatMap(accountRepository::findOneWithAuthoritiesByUsername).orElseGet(()->null));
+        return ResponseMember.Info.of(
+                securityUtil.getCurrentUsername()
+                        .flatMap(accountRepository::findOneWithAuthoritiesByUsername)
+                        .orElseGet(()->null));
     }
 }
