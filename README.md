@@ -5,13 +5,13 @@
 `spring REST Docs`를 통해 API 문서화가 되어있습니다.<br/>
 `flyway` DB 마이그레이션 도구를 사용합니다.
 
-### Maven Build
+### Gradle Build
 ```bash
-./mvnw clean package
+./gradlew clean bootJar
 ```
-### Maven Run
+### Java Run
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8080' -Dspring-boot.run.profiles=local
+java -Dserver.port=8080 -jar build/libs/jwt-0.0.1-SNAPSHOT.jar
 ```
 ### spring REST Docs 접속
 ```
