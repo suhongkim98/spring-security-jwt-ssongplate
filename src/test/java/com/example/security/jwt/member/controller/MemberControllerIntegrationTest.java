@@ -56,7 +56,7 @@ public class MemberControllerIntegrationTest {
                 .andExpect(jsonPath("$.response.authoritySet", is(notNullValue())))
                 .andDo(print());
         // rest docs 문서화
-        actions.andDo(document("user-register",
+        actions.andDo(document("member-register",
                 requestFields(
                         fieldWithPath("username").description("회원가입 하고자 하는 username (USER_ROLE)"),
                         fieldWithPath("password").description("회원가입 하고자 하는 password"),
