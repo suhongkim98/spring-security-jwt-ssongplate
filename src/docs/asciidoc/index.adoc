@@ -11,9 +11,9 @@
 == My Api Docs
 API 명세서 index.html이다.
 
-include::member-register.adoc[]
-include::account-authenticate.adoc[]
-include::account-token-refresh.adoc[]
-include::account-token-invalidate.adoc[]
+include::src/docs/asciidoc/member-register.adoc[]
+include::src/docs/asciidoc/account-authenticate.adoc[]
+include::src/docs/asciidoc/account-token-refresh.adoc[]
+include::src/docs/asciidoc/account-token-invalidate.adoc[]
 
 
