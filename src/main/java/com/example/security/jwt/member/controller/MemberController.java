@@ -7,7 +7,7 @@ import com.example.security.jwt.member.dto.ResponseMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")

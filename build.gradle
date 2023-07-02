@@ -1,9 +1,13 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.springframework.boot' version '3.0.8'
+    id 'io.spring.dependency-management' version '1.1.0'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id 'com.epages.restdocs-api-spec' version '0.16.2'
+}
+
+repositories {
+    mavenCentral()
 }
 
 group = 'com.example.security'
@@ -43,11 +47,6 @@ bootJar {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
-}
-
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {

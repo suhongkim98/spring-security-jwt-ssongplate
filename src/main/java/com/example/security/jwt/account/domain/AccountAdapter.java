@@ -1,8 +1,6 @@
 package com.example.security.jwt.account.domain;
 
 
-import com.example.security.jwt.account.domain.Account;
-import com.example.security.jwt.account.domain.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

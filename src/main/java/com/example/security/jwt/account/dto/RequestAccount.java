@@ -2,8 +2,8 @@ package com.example.security.jwt.account.dto;
 
 import lombok.Builder;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record RequestAccount() {
     @Builder
