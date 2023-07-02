@@ -28,7 +28,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     @Override
     public ResponseAdmin.Info signup(RequestAdmin.Register registerDto) {
-        if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.getUsername()).orElseGet(()->null) != null) {
+        if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.username()).orElseGet(()->null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -39,9 +39,9 @@ public class AdminServiceImpl implements AdminService {
                 .build();
 
         Account member = Account.builder()
-                .username(registerDto.getUsername())
-                .password(passwordEncoder.encode(registerDto.getPassword()))
-                .nickname(registerDto.getNickname())
+                .username(registerDto.username())
+                .password(passwordEncoder.encode(registerDto.password()))
+                .nickname(registerDto.nickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();

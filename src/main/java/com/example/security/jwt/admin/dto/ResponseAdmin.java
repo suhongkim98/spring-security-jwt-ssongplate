@@ -1,25 +1,21 @@
 package com.example.security.jwt.admin.dto;
 
 import com.example.security.jwt.account.domain.Account;
-import lombok.AllArgsConstructor;
+import com.example.security.jwt.account.domain.Authority;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ResponseAdmin {
+public record ResponseAdmin() {
     @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Info {
-        private String username;
-        private String password;
-        private String nickname;
-        private Long tokenWeight;
-        private Set<String> authoritySet;
+    public record Info(
+            String username,
+            String password,
+            String nickname,
+            Long tokenWeight,
+            Set<String> authoritySet
+    ) {
 
         public static ResponseAdmin.Info of(Account account) {
             if(account == null) return null;
@@ -30,7 +26,7 @@ public class ResponseAdmin {
                     .nickname(account.getNickname())
                     .tokenWeight(account.getTokenWeight())
                     .authoritySet(account.getAuthorities().stream()
-                            .map(authority -> authority.getAuthorityName())
+                            .map(Authority::getAuthorityName)
                             .collect(Collectors.toSet()))
                     .build();
         }

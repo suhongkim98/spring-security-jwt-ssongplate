@@ -111,7 +111,7 @@ public class AccountControllerIntegrationTest
         // given
         ResponseAccount.Token token = accountService.authenticate("dusik", "dusikpassword");
         Map<String, Object> input = new HashMap<>();
-        input.put("token", token.getRefreshToken());
+        input.put("token", token.refreshToken());
 
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.put("/api/v1/accounts/token")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +145,7 @@ public class AccountControllerIntegrationTest
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/accounts/{username}/token", targetUsername)
-                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .header("Authorization", "Bearer " + token.accessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())

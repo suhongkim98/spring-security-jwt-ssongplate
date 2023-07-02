@@ -1,9 +1,10 @@
 # spring-security-jwt-ssongplate
 
-본 프로젝트는 `Java 11`버전을 기준으로 개발하였습니다.<br/>
+본 프로젝트는 `Java 17`버전을 기준으로 개발하였습니다.<br/>
 `Spring Security` + `JWT`를 활용한 인증 인가 템플릿입니다.<br/>
 `spring REST Docs`를 통해 API 문서화가 되어있습니다.<br/>
-`flyway` DB 마이그레이션 도구를 사용합니다.
+`flyway` DB 마이그레이션 도구를 사용합니다.<br/>
+소프트웨어 아키텍처로 `레이어드 아키텍처`를 사용합니다.
 
 ### Gradle Build
 ```bash

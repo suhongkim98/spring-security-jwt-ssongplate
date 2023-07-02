@@ -27,11 +27,11 @@ public class AccountController
     @PostMapping("/token") // Account 인증 API
     public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody RequestAccount.Login loginDto) {
 
-        ResponseAccount.Token token = accountService.authenticate(loginDto.getUsername(), loginDto.getPassword());
+        ResponseAccount.Token token = accountService.authenticate(loginDto.username(), loginDto.password());
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.getAccessToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         // 응답
         CommonResponse response = CommonResponse.builder()
@@ -45,11 +45,11 @@ public class AccountController
     @PutMapping("/token") // 리프레시 토큰을 활용한 액세스 토큰 갱신
     public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RequestAccount.Refresh refreshDto) {
 
-        ResponseAccount.Token token = accountService.refreshToken(refreshDto.getToken());
+        ResponseAccount.Token token = accountService.refreshToken(refreshDto.token());
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.getAccessToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         // 응답
         CommonResponse response = CommonResponse.builder()

@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public ResponseMember.Info signup(RequestMember.Register registerDto) {
-        if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.getUsername()).orElseGet(()->null) != null) {
+        if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.username()).orElseGet(()->null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -43,9 +43,9 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         Account user = Account.builder()
-                .username(registerDto.getUsername())
-                .password(passwordEncoder.encode(registerDto.getPassword()))
-                .nickname(registerDto.getNickname())
+                .username(registerDto.username())
+                .password(passwordEncoder.encode(registerDto.password()))
+                .nickname(registerDto.nickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();

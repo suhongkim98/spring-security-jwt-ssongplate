@@ -1,29 +1,24 @@
 package com.example.security.jwt.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class RequestMember {
+public record RequestMember() {
     @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Register {
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String username;
+    public record Register(
+            @NotNull
+            @Size(min = 3, max = 50)
+            String username,
 
-        @NotNull
-        @Size(min = 5, max = 100)
-        private String password;
+            @NotNull
+            @Size(min = 5, max = 100)
+            String password,
 
-        @NotNull
-        @Size(min = 5, max = 100)
-        private String nickname;
+            @NotNull
+            @Size(min = 5, max = 100)
+            String nickname
+    ) {
     }
 }

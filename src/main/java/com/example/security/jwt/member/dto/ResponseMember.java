@@ -1,25 +1,20 @@
 package com.example.security.jwt.member.dto;
 
 import com.example.security.jwt.account.domain.Account;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ResponseMember {
+public record ResponseMember() {
     @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Info {
-        private String username;
-        private String password;
-        private String nickname;
-        private Long tokenWeight;
-        private Set<String> authoritySet;
+    public record Info(
+            String username,
+            String password,
+            String nickname,
+            Long tokenWeight,
+            Set<String> authoritySet
+    ) {
 
         public static ResponseMember.Info of(Account account) {
             if(account == null) return null;
