@@ -3,7 +3,7 @@ package com.example.security.jwt.account.controller;
 import com.example.security.jwt.account.dto.ResponseAccount;
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.account.dto.RequestAccount;
-import com.example.security.jwt.global.security.JwtFilter;
+import com.example.security.jwt.global.security.CustomJwtFilter;
 import com.example.security.jwt.account.service.AccountService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class AccountController
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
+        httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         // 응답
         CommonResponse response = CommonResponse.builder()
@@ -49,7 +49,7 @@ public class AccountController
 
         // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
+        httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         // 응답
         CommonResponse response = CommonResponse.builder()

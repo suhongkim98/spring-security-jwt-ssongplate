@@ -3,6 +3,7 @@ package com.example.security.jwt.global.security.handler;
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.global.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -15,12 +16,10 @@ import java.io.IOException;
 
 // 인증 실패 시
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private ObjectMapper objectMapper;
-    @PostConstruct
-    void init() {
-        objectMapper = new ObjectMapper();
-    }
+    private final ObjectMapper objectMapper;
+
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
