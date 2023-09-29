@@ -6,6 +6,8 @@
 `flyway` DB 마이그레이션 도구를 사용합니다.<br/>
 소프트웨어 아키텍처로 `레이어드 아키텍처`를 사용합니다.
 
+![img.png](docs/img.png)
+
 ### Gradle Build
 ```bash
 ./gradlew clean bootJar
