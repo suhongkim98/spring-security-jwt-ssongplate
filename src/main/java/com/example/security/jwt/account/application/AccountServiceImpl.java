@@ -4,7 +4,7 @@ import com.example.security.jwt.account.domain.entity.AccountAdapter;
 import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.AccountErrorCode;
-import com.example.security.jwt.global.exception.CommonException;
+import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.account.domain.AccountRepository;
 import com.example.security.jwt.global.security.RefreshTokenProvider;
 import com.example.security.jwt.global.security.TokenProvider;
@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService
     @Override
     public ResponseAccount.Token refreshToken(String refreshToken) {
         // 먼저 리프레시 토큰을 검증한다.
-        if(!refreshTokenProvider.validateToken(refreshToken)) throw new CommonException(AccountErrorCode.INVALID_REFRESH_TOKEN);
+        if(!refreshTokenProvider.validateToken(refreshToken)) throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
 
         // 리프레시 토큰 값을 이용해 사용자를 꺼낸다.
         // refreshTokenProvider과 TokenProvider는 다른 서명키를 가지고 있기에 refreshTokenProvider를 써야함
@@ -67,7 +67,7 @@ public class AccountServiceImpl implements AccountService
         Account account = accountRepository.findOneWithAuthoritiesByUsername(authentication.getName())
                 .orElseThrow(()-> new UsernameNotFoundException(authentication.getName() + "을 찾을 수 없습니다"));
         // 사용자 디비 값에 있는 것과 가중치 비교, 디비 가중치가 더 크다면 유효하지 않음
-        if(account.getTokenWeight() > refreshTokenProvider.getTokenWeight(refreshToken)) throw new CommonException(AccountErrorCode.INVALID_REFRESH_TOKEN);
+        if(account.getTokenWeight() > refreshTokenProvider.getTokenWeight(refreshToken)) throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
 
         // 리프레시 토큰에 담긴 값을 그대로 액세스 토큰 생성에 활용한다.
         String accessToken = tokenProvider.createToken(authentication);

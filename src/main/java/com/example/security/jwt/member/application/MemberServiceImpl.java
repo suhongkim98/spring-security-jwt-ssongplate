@@ -3,7 +3,7 @@ package com.example.security.jwt.member.application;
 import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.entity.Authority;
 import com.example.security.jwt.global.exception.CommonErrorCode;
-import com.example.security.jwt.global.exception.CommonException;
+import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.account.domain.AccountRepository;
 import com.example.security.jwt.global.security.util.SecurityUtil;
 import com.example.security.jwt.member.application.dto.RequestMember;
@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseMember.Info signup(RequestMember.Register registerDto) {
         if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.username()).orElseGet(()->null) != null) {
-            throw new CommonException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
+            throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
         }
 
         // 이 유저는 권한이 ROLE_MEMBER

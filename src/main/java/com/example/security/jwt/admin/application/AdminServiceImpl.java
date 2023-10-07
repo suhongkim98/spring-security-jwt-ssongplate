@@ -5,7 +5,7 @@ import com.example.security.jwt.admin.application.dto.ResponseAdmin;
 import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.entity.Authority;
 import com.example.security.jwt.global.exception.CommonErrorCode;
-import com.example.security.jwt.global.exception.CommonException;
+import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.account.domain.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseAdmin.Info signup(RequestAdmin.Register registerDto) {
         if (accountRepository.findOneWithAuthoritiesByUsername(registerDto.username()).orElseGet(()->null) != null) {
-            throw new CommonException(CommonErrorCode.CONFLICT);
+            throw new ApplicationException(CommonErrorCode.CONFLICT);
         }
 
         // 권한이 ROLE_ADMIN

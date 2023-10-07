@@ -30,9 +30,43 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, commonErrorCode.getHttpStatus());
     }
 
-    @ExceptionHandler(CommonException.class)
-    protected ResponseEntity<CommonResponse> handleCommonException(CommonException ex) {
+    @ExceptionHandler(ApplicationException.class)
+    protected ResponseEntity<CommonResponse> handleApplicationException(ApplicationException ex) {
         BaseErrorCode errorCode = ex.getErrorCode();
+
+        ErrorResponse error = ErrorResponse.builder()
+                .status(errorCode.getHttpStatus().value())
+                .message(errorCode.getMessage())
+                .code(errorCode.getCode())
+                .build();
+
+        CommonResponse response = CommonResponse.builder()
+                .success(false)
+                .error(error)
+                .build();
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
+    @ExceptionHandler(InfrastructureException.class)
+    protected ResponseEntity<CommonResponse> handleInfrastructureException(InfrastructureException ex) {
+        BaseErrorCode errorCode = ex.getErrorCode();
+
+        ErrorResponse error = ErrorResponse.builder()
+                .status(errorCode.getHttpStatus().value())
+                .message(errorCode.getMessage())
+                .code(errorCode.getCode())
+                .build();
+
+        CommonResponse response = CommonResponse.builder()
+                .success(false)
+                .error(error)
+                .build();
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+    }
+
+    @ExceptionHandler(DomainException.class)
+    protected ResponseEntity<CommonResponse> handleDomainException(DomainException ex) {
+        BaseErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
 
         ErrorResponse error = ErrorResponse.builder()
                 .status(errorCode.getHttpStatus().value())
