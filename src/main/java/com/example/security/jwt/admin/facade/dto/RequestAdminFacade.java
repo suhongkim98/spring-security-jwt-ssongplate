@@ -1,11 +1,11 @@
-package com.example.security.jwt.admin.application.dto;
+package com.example.security.jwt.admin.facade.dto;
 
 import lombok.Builder;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record RequestAdmin() {
+public record RequestAdminFacade() {
     @Builder
     public record Register(
             @NotNull

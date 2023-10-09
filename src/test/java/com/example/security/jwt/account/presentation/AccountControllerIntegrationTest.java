@@ -1,10 +1,10 @@
 package com.example.security.jwt.account.presentation;
 
-import com.example.security.jwt.admin.application.dto.RequestAdmin;
-import com.example.security.jwt.admin.application.AdminService;
+import com.example.security.jwt.admin.facade.dto.RequestAdminFacade;
+import com.example.security.jwt.admin.facade.AdminFacade;
 import com.example.security.jwt.account.application.AccountService;
-import com.example.security.jwt.member.application.dto.RequestMember;
-import com.example.security.jwt.member.application.MemberService;
+import com.example.security.jwt.member.facacde.dto.RequestMemberFacade;
+import com.example.security.jwt.member.facacde.MemberFacade;
 import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,26 +46,26 @@ public class AccountControllerIntegrationTest
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private MemberService memberService;
+    private MemberFacade memberFacade;
     @Autowired
     private AccountService accountService;
     @Autowired
-    private AdminService adminService;
+    private AdminFacade adminFacade;
 
     @BeforeAll
     void beforeAll() {
         // 회원 생성
-        memberService.signup(RequestMember.Register.builder()
+        memberFacade.signup(RequestMemberFacade.Register.builder()
                         .nickname("길동이")
                         .username("gildong")
                         .password("gildongspassword")
                 .build());
-        memberService.signup(RequestMember.Register.builder()
+        memberFacade.signup(RequestMemberFacade.Register.builder()
                 .nickname("두식이")
                 .username("dusik")
                 .password("dusikpassword")
                 .build());
-        adminService.signup(RequestAdmin.Register.builder()
+        adminFacade.signup(RequestAdminFacade.Register.builder()
                         .nickname("나야어드민")
                         .username("honghong")
                         .password("hongpassword")
