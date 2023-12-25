@@ -1,16 +1,16 @@
-package com.example.security.jwt.member.facacde;
+package com.example.security.jwt.member.application;
 
 import com.example.security.jwt.account.application.AccountService;
 import com.example.security.jwt.account.application.dto.RequestAccount;
 import com.example.security.jwt.account.application.dto.ResponseAccount;
-import com.example.security.jwt.member.facacde.dto.RequestMemberFacade;
-import com.example.security.jwt.member.facacde.dto.ResponseMemberFacade;
+import com.example.security.jwt.member.application.dto.RequestMemberFacade;
+import com.example.security.jwt.member.application.dto.ResponseMemberFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberFacadeImpl implements MemberFacade {
+public class MemberFacadeServiceImpl implements MemberFacadeService {
 
     private final AccountService accountService;
 

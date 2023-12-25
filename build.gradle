@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.0.8'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
-    id 'com.epages.restdocs-api-spec' version '0.16.2'
+    id 'com.epages.restdocs-api-spec' version '0.18.2'
 }
 
 repositories {
@@ -13,7 +13,10 @@ repositories {
 group = 'com.example.security'
 version = '0.0.1-SNAPSHOT'
 description = 'jwt'
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    sourceCompatibility = '21'
+}
 
 configurations {
     compileOnly {
@@ -57,8 +60,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation 'org.flywaydb:flyway-core:8.5.5'
-    runtimeOnly 'com.h2database:h2:1.4.200'
+    implementation 'org.flywaydb:flyway-core:9.16.0'
+    runtimeOnly 'com.h2database:h2'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'

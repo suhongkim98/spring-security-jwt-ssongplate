@@ -22,7 +22,7 @@ public class CustomJwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
     public CustomJwtFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;

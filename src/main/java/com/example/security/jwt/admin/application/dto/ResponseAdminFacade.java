@@ -1,13 +1,10 @@
-package com.example.security.jwt.member.facacde.dto;
+package com.example.security.jwt.admin.application.dto;
 
-import com.example.security.jwt.account.domain.entity.Account;
-import com.example.security.jwt.account.domain.entity.Authority;
 import lombok.Builder;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public record ResponseMemberFacade() {
+public record ResponseAdminFacade() {
     @Builder
     public record Information(
             String username,

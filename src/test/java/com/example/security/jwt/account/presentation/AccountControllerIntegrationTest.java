@@ -1,10 +1,10 @@
 package com.example.security.jwt.account.presentation;
 
-import com.example.security.jwt.admin.facade.dto.RequestAdminFacade;
-import com.example.security.jwt.admin.facade.AdminFacade;
+import com.example.security.jwt.admin.application.dto.RequestAdminFacade;
+import com.example.security.jwt.admin.application.AdminFacadeService;
 import com.example.security.jwt.account.application.AccountService;
-import com.example.security.jwt.member.facacde.dto.RequestMemberFacade;
-import com.example.security.jwt.member.facacde.MemberFacade;
+import com.example.security.jwt.member.application.dto.RequestMemberFacade;
+import com.example.security.jwt.member.application.MemberFacadeService;
 import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,26 +46,26 @@ public class AccountControllerIntegrationTest
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private MemberFacade memberFacade;
+    private MemberFacadeService memberFacadeService;
     @Autowired
     private AccountService accountService;
     @Autowired
-    private AdminFacade adminFacade;
+    private AdminFacadeService adminFacadeService;
 
     @BeforeAll
     void beforeAll() {
         // 회원 생성
-        memberFacade.signup(RequestMemberFacade.Register.builder()
+        memberFacadeService.signup(RequestMemberFacade.Register.builder()
                         .nickname("길동이")
                         .username("gildong")
                         .password("gildongspassword")
                 .build());
-        memberFacade.signup(RequestMemberFacade.Register.builder()
+        memberFacadeService.signup(RequestMemberFacade.Register.builder()
                 .nickname("두식이")
                 .username("dusik")
                 .password("dusikpassword")
                 .build());
-        adminFacade.signup(RequestAdminFacade.Register.builder()
+        adminFacadeService.signup(RequestAdminFacade.Register.builder()
                         .nickname("나야어드민")
                         .username("honghong")
                         .password("hongpassword")
