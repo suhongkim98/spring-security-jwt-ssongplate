@@ -1,7 +1,7 @@
 package com.example.security.jwt.global.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -13,20 +13,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomJwtFilter extends GenericFilterBean {
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomJwtFilter.class);
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private final TokenProvider tokenProvider;
-
-    public CustomJwtFilter(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
+    private final AccessTokenProvider accessTokenProvider;
 
     // 실제 필터링 로직은 doFilter 안에 들어가게 된다. GenericFilterBean을 받아 구현
     // Dofilter는 토큰의 인증정보를 SecurityContext 안에 저장하는 역할 수행
@@ -40,14 +37,14 @@ public class CustomJwtFilter extends GenericFilterBean {
         String requestURI = httpServletRequest.getRequestURI();
 
         // 유효성 검증
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+        if (StringUtils.hasText(jwt) && accessTokenProvider.validateToken(jwt)) {
             // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
+            Authentication authentication = accessTokenProvider.getAuthentication(jwt);
             // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
         } else {
-            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

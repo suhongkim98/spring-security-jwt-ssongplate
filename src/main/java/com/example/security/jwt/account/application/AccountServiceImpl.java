@@ -10,7 +10,7 @@ import com.example.security.jwt.global.exception.ApplicationException;
 import com.example.security.jwt.account.domain.AccountRepository;
 import com.example.security.jwt.global.exception.CommonErrorCode;
 import com.example.security.jwt.global.security.RefreshTokenProvider;
-import com.example.security.jwt.global.security.TokenProvider;
+import com.example.security.jwt.global.security.AccessTokenProvider;
 import com.example.security.jwt.global.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
-    private final TokenProvider tokenProvider;
+    private final AccessTokenProvider accessTokenProvider;
     private final RefreshTokenProvider refreshTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AccountRepository accountRepository;
@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기준으로 jwt access 토큰 생성
-        String accessToken = tokenProvider.createToken(authentication);
+        String accessToken = accessTokenProvider.createToken(authentication);
 
         // 위에서 loadUserByUsername를 호출하였으므로 AccountAdapter가 시큐리티 컨텍스트에 저장되어 Account 엔티티 정보를 우리는 알 수 있음
         // 유저 정보에서 중치를 꺼내 리프레시 토큰 가중치에 할당, 나중에 액세스토큰 재발급 시도 시 유저정보 가중치 > 리프레시 토큰이라면 실패
@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         if(account.getTokenWeight() > refreshTokenProvider.getTokenWeight(refreshToken)) throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
 
         // 리프레시 토큰에 담긴 값을 그대로 액세스 토큰 생성에 활용한다.
-        String accessToken = tokenProvider.createToken(authentication);
+        String accessToken = accessTokenProvider.createToken(authentication);
         // 기존 리프레시 토큰과 새로 만든 액세스 토큰을 반환한다.
         return ResponseAccount.Token.builder()
                 .accessToken(accessToken)

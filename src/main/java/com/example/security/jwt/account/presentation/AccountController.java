@@ -64,7 +64,7 @@ public class AccountController
     //-> 해당 계정의 가중치를 1 올린다. 그럼 나중에 해당 리프레시 토큰으로 갱신 요청이 들어와도 받아들여지지 않음
     @DeleteMapping("/{username}/token")
     @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
-    public ResponseEntity<CommonResponse> authorize(@PathVariable String username) {
+    public ResponseEntity<CommonResponse> authorize(@PathVariable(name = "username") String username) {
         accountService.invalidateRefreshTokenByUsername(username);
         // 응답
         CommonResponse response = CommonResponse.builder()

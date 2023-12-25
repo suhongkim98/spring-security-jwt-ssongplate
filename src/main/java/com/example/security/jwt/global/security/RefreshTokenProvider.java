@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 // 토큰 생성 시 가중치를 클레임에 넣는다.
 // 토큰 검증 시 유저 가중치 > 리프레시 토큰 가중치라면 리프레시 토큰은 유효하지 않다.
 
-public class RefreshTokenProvider extends TokenProvider {
+public final class RefreshTokenProvider extends TokenProvider {
+
     private static final String WEIGHT_KEY = "token-weight";
 
     public RefreshTokenProvider(String secret, long tokenValidityInSeconds) {
@@ -40,6 +41,6 @@ public class RefreshTokenProvider extends TokenProvider {
     public long getTokenWeight(String token) {
         // 토큰에서 가중치를 꺼내 반환한다.
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return Long.valueOf(String.valueOf(claims.get(WEIGHT_KEY)));
+        return Long.parseLong(String.valueOf(claims.get(WEIGHT_KEY)));
     }
 }

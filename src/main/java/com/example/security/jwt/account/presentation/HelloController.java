@@ -44,7 +44,7 @@ public class HelloController {
 
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
-    public ResponseEntity<ResponseAccount.Information> getUserInfo(@PathVariable String username) {
+    public ResponseEntity<ResponseAccount.Information> getUserInfo(@PathVariable(name = "username") String username) {
         return ResponseEntity.ok(accountService.getAccountWithAuthorities(username));
     }
 }
