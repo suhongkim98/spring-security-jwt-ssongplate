@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1")
 public class MemberController {
+
     private final MemberFacadeService memberFacadeService;
 
     public MemberController(MemberFacadeService memberFacadeService) {

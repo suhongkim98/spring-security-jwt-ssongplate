@@ -17,8 +17,8 @@ public class AdminFacadeServiceImpl implements AdminFacadeService {
     private final AccountService accountService;
 
     // 회원가입 메서드
-    @Transactional
     @Override
+    @Transactional
     public ResponseAdminFacade.Information signup(RequestAdminFacade.Register registerDto) {
         ResponseAccount.Information response = accountService.registerAdmin(RequestAccount.RegisterAdmin.builder()
                         .nickname(registerDto.nickname())

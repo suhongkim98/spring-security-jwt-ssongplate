@@ -15,11 +15,10 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
-public class AccountController
-{
+public class AccountController {
+
     private final AccountService accountService;
 
-    // 생성자주입
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }

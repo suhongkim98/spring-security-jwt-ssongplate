@@ -60,8 +60,8 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public ResponseAccount.Token refreshToken(String refreshToken) {
         // 먼저 리프레시 토큰을 검증한다.
         if(!refreshTokenProvider.validateToken(refreshToken)) throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
@@ -84,16 +84,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // Account 가중치를 1 올림으로써 해당 username 리프레시토큰 무효화
-    @Transactional
     @Override
+    @Transactional
     public void invalidateRefreshTokenByUsername(String username) {
         Account account = accountRepository.findOneWithAuthoritiesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "-> 찾을 수 없습니다"));
         account.increaseTokenWeight(); // 더티체킹에 의해 엔티티 변화 반영
     }
 
-    @Transactional
     @Override
+    @Transactional
     public ResponseAccount.Information registerMember(RequestAccount.RegisterMember registerMemberDto) {
         Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(
                 registerMemberDto.username());
@@ -120,8 +120,8 @@ public class AccountServiceImpl implements AccountService {
         return ResponseAccount.Information.of(accountRepository.save(user));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto) {
         Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(
                 registerAdminDto.username());
@@ -147,8 +147,8 @@ public class AccountServiceImpl implements AccountService {
         return ResponseAccount.Information.of(accountRepository.save(user));
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public ResponseAccount.Information getAccountWithAuthorities(String username) {
         Account account = accountRepository.findOneWithAuthoritiesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "-> 찾을 수 없습니다"));
@@ -156,8 +156,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 현재 시큐리티 컨텍스트에 저장된 username에 해당하는 정보를 가져온다.
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public ResponseAccount.Information getMyAccountWithAuthorities() {
         Account account = securityUtil.getCurrentUsername()
                 .flatMap(accountRepository::findOneWithAuthoritiesByUsername)

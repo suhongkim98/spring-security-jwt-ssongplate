@@ -7,8 +7,7 @@ import lombok.Builder;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record ResponseAccount()
-{
+public record ResponseAccount() {
     @Builder
     public record Token(
             String accessToken,

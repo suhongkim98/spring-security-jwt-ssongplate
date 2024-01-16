@@ -9,7 +9,7 @@ spring:
 # 실무환경에서는 management 포트나 base-path 를 통해 접근하지 못하도록 접근제어 필요
 management:
   server:
-    port: 8081 # actuator 접근 포트 지정
+    port: 8080 # actuator 접근 포트 지정
 
   endpoint: # 종류: https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
     info:

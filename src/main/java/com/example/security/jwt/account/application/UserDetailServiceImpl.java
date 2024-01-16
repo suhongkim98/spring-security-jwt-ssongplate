@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
+
     private final AccountRepository accountRepository;
 
     public UserDetailServiceImpl(AccountRepository accountRepository) {
