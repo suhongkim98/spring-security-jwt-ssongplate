@@ -1,9 +1,7 @@
 package com.example.security.jwt.member.presentation;
 
-import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.member.application.MemberFacadeService;
-import com.example.security.jwt.member.application.dto.RequestMemberFacade;
-import com.example.security.jwt.member.application.dto.ResponseMemberFacade;
+import com.example.security.jwt.member.application.dto.RegisterMemberFacadeRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +19,13 @@ public class MemberController {
 
     // user 등록 API
     @PostMapping("/members")
-    public ResponseEntity<CommonResponse> signup(
-            @Valid @RequestBody RequestMemberFacade.Register registerDto
+    public ResponseEntity<Void> signup(
+            @Valid @RequestBody RegisterMemberFacadeRequestDto requestDto
     ) {
-        ResponseMemberFacade.Information userInfo = memberFacadeService.signup(registerDto);
+        memberFacadeService.signup(requestDto);
 
-        CommonResponse response = CommonResponse.builder()
-                .success(true)
-                .response(userInfo)
+        return ResponseEntity
+                .noContent()
                 .build();
-        return ResponseEntity.ok(response);
     }
 }

@@ -1,11 +1,11 @@
 package com.example.security.jwt.account.presentation;
 
-import com.example.security.jwt.admin.application.dto.RequestAdminFacade;
+import com.example.security.jwt.account.application.dto.TokenResponseDto;
+import com.example.security.jwt.admin.application.dto.RegisterAdminFacadeRequestDto;
 import com.example.security.jwt.admin.application.AdminFacadeService;
 import com.example.security.jwt.account.application.AccountService;
-import com.example.security.jwt.member.application.dto.RequestMemberFacade;
+import com.example.security.jwt.member.application.dto.RegisterMemberFacadeRequestDto;
 import com.example.security.jwt.member.application.MemberFacadeService;
-import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -55,17 +55,17 @@ public class AccountControllerIntegrationTest
     @BeforeAll
     void beforeAll() {
         // 회원 생성
-        memberFacadeService.signup(RequestMemberFacade.Register.builder()
+        memberFacadeService.signup(RegisterMemberFacadeRequestDto.builder()
                         .nickname("길동이")
                         .username("gildong")
                         .password("gildongspassword")
                 .build());
-        memberFacadeService.signup(RequestMemberFacade.Register.builder()
+        memberFacadeService.signup(RegisterMemberFacadeRequestDto.builder()
                 .nickname("두식이")
                 .username("dusik")
                 .password("dusikpassword")
                 .build());
-        adminFacadeService.signup(RequestAdminFacade.Register.builder()
+        adminFacadeService.signup(RegisterAdminFacadeRequestDto.builder()
                         .nickname("나야어드민")
                         .username("honghong")
                         .password("hongpassword")
@@ -97,10 +97,8 @@ public class AccountControllerIntegrationTest
                 responseFields(
                         fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
                         fieldWithPath("dateTime").description("response time"),
-                        fieldWithPath("success").description("정상 응답 여부"),
                         fieldWithPath("response.accessToken").description("액세스 토큰"),
-                        fieldWithPath("response.refreshToken").description("리프레시 토큰"),
-                        fieldWithPath("error").description("error 발생 시 에러 정보")
+                        fieldWithPath("response.refreshToken").description("리프레시 토큰")
                 )
         ));
     }
@@ -109,7 +107,7 @@ public class AccountControllerIntegrationTest
     @DisplayName("액세스 토큰 갱신 테스트")
     void refreshTokenTest() throws Exception {
         // given
-        ResponseAccount.Token token = accountService.authenticate("dusik", "dusikpassword");
+        TokenResponseDto token = accountService.authenticate("dusik", "dusikpassword");
         Map<String, Object> input = new HashMap<>();
         input.put("token", token.refreshToken());
 
@@ -129,10 +127,8 @@ public class AccountControllerIntegrationTest
                 responseFields(
                         fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
                         fieldWithPath("dateTime").description("response time"),
-                        fieldWithPath("success").description("정상 응답 여부"),
                         fieldWithPath("response.accessToken").description("액세스 토큰"),
-                        fieldWithPath("response.refreshToken").description("리프레시 토큰"),
-                        fieldWithPath("error").description("error 발생 시 에러 정보")
+                        fieldWithPath("response.refreshToken").description("리프레시 토큰")
                 )
         ));
 
@@ -141,28 +137,20 @@ public class AccountControllerIntegrationTest
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        ResponseAccount.Token token = accountService.authenticate("honghong", "hongpassword");
+        TokenResponseDto token = accountService.authenticate("honghong", "hongpassword");
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/accounts/{username}/token", targetUsername)
                         .header("Authorization", "Bearer " + token.accessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success", "true").exists())
+                .andExpect(status().isNoContent())
                 .andDo(print());
 
         // rest docs 문서화
         actions.andDo(document("account-token-invalidate",
                 pathParameters(
                         parameterWithName("username").description("만료시키고자 하는 계정 username")
-                ),
-                responseFields(
-                        fieldWithPath("id").description("logging을 위한 api response 고유 ID"),
-                        fieldWithPath("dateTime").description("response time"),
-                        fieldWithPath("success").description("정상 응답 여부"),
-                        fieldWithPath("response").description("null"),
-                        fieldWithPath("error").description("error 발생 시 에러 정보")
                 )
         ));
 

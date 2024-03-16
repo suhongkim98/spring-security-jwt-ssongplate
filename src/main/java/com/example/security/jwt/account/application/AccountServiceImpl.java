@@ -1,8 +1,10 @@
 package com.example.security.jwt.account.application;
 
-import com.example.security.jwt.account.application.dto.RequestAccount;
+import com.example.security.jwt.account.application.dto.AccountInfoResponseDto;
+import com.example.security.jwt.account.application.dto.RegisterAdminRequestDto;
+import com.example.security.jwt.account.application.dto.RegisterMemberRequestDto;
+import com.example.security.jwt.account.application.dto.TokenResponseDto;
 import com.example.security.jwt.account.domain.entity.AccountAdapter;
-import com.example.security.jwt.account.application.dto.ResponseAccount;
 import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.account.domain.AccountErrorCode;
 import com.example.security.jwt.account.domain.entity.Authority;
@@ -37,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
 
     // username 과 패스워드로 사용자를 인증하여 액세스토큰과 리프레시 토큰을 반환한다.
     @Override
-    public ResponseAccount.Token authenticate(String username, String password) {
+    public TokenResponseDto authenticate(String username, String password) {
         // 받아온 유저네임과 패스워드를 이용해 UsernamePasswordAuthenticationToken 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
@@ -54,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
         Long tokenWeight = ((AccountAdapter)authentication.getPrincipal()).getAccount().getTokenWeight();
         String refreshToken = refreshTokenProvider.createToken(authentication, tokenWeight);
 
-        return ResponseAccount.Token.builder()
+        return TokenResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -62,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseAccount.Token refreshToken(String refreshToken) {
+    public TokenResponseDto refreshToken(String refreshToken) {
         // 먼저 리프레시 토큰을 검증한다.
         if(!refreshTokenProvider.validateToken(refreshToken)) throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
 
@@ -77,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
         // 리프레시 토큰에 담긴 값을 그대로 액세스 토큰 생성에 활용한다.
         String accessToken = accessTokenProvider.createToken(authentication);
         // 기존 리프레시 토큰과 새로 만든 액세스 토큰을 반환한다.
-        return ResponseAccount.Token.builder()
+        return TokenResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -94,9 +96,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public ResponseAccount.Information registerMember(RequestAccount.RegisterMember registerMemberDto) {
+    public void registerMember(RegisterMemberRequestDto requestDto) {
         Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(
-                registerMemberDto.username());
+                requestDto.username());
 
         if (accountOptional.isPresent()) {
             throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
@@ -109,22 +111,21 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         Account user = Account.builder()
-                .username(registerMemberDto.username())
-                .password(passwordEncoder.encode(registerMemberDto.password()))
-                .nickname(registerMemberDto.nickname())
+                .username(requestDto.username())
+                .password(passwordEncoder.encode(requestDto.password()))
+                .nickname(requestDto.nickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
 
-        // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다. 원랜 당연히 보내면 안댐
-        return ResponseAccount.Information.of(accountRepository.save(user));
+        accountRepository.save(user);
     }
 
     @Override
     @Transactional
-    public ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto) {
+    public void registerAdmin(RegisterAdminRequestDto requestDto) {
         Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(
-                registerAdminDto.username());
+                requestDto.username());
 
         if (accountOptional.isPresent()) {
             throw new ApplicationException(CommonErrorCode.CONFLICT, "이미 가입되어있는 유저");
@@ -136,32 +137,31 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         Account user = Account.builder()
-                .username(registerAdminDto.username())
-                .password(passwordEncoder.encode(registerAdminDto.password()))
-                .nickname(registerAdminDto.nickname())
+                .username(requestDto.username())
+                .password(passwordEncoder.encode(requestDto.password()))
+                .nickname(requestDto.nickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
 
-        // DB에 저장하고 그걸 DTO로 변환해서 반환, 예제라서 비번까지 다 보낸다. 원랜 당연히 보내면 안댐
-        return ResponseAccount.Information.of(accountRepository.save(user));
+        accountRepository.save(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseAccount.Information getAccountWithAuthorities(String username) {
+    public AccountInfoResponseDto getAccountWithAuthorities(String username) {
         Account account = accountRepository.findOneWithAuthoritiesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "-> 찾을 수 없습니다"));
-        return ResponseAccount.Information.of(account);
+        return AccountInfoResponseDto.of(account);
     }
 
     // 현재 시큐리티 컨텍스트에 저장된 username에 해당하는 정보를 가져온다.
     @Override
     @Transactional(readOnly = true)
-    public ResponseAccount.Information getMyAccountWithAuthorities() {
+    public AccountInfoResponseDto getMyAccountWithAuthorities() {
         Account account = securityUtil.getCurrentUsername()
                 .flatMap(accountRepository::findOneWithAuthoritiesByUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("security context로부터 찾을 수 없습니다"));
-        return ResponseAccount.Information.of(account);
+        return AccountInfoResponseDto.of(account);
     }
 }

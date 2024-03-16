@@ -1,20 +1,23 @@
 package com.example.security.jwt.account.application;
 
-import com.example.security.jwt.account.application.dto.RequestAccount;
-import com.example.security.jwt.account.application.dto.ResponseAccount;
+import com.example.security.jwt.account.application.dto.AccountInfoResponseDto;
+import com.example.security.jwt.account.application.dto.RegisterAdminRequestDto;
+import com.example.security.jwt.account.application.dto.RegisterMemberRequestDto;
+import com.example.security.jwt.account.application.dto.TokenResponseDto;
 
 public interface AccountService {
-    ResponseAccount.Token authenticate(String username, String password);
 
-    ResponseAccount.Token refreshToken(String refreshToken);
+    TokenResponseDto authenticate(String username, String password);
+
+    TokenResponseDto refreshToken(String refreshToken);
 
     void invalidateRefreshTokenByUsername(String username);
 
-    ResponseAccount.Information registerMember(RequestAccount.RegisterMember registerMemberDto);
+    void registerMember(RegisterMemberRequestDto requestDto);
 
-    ResponseAccount.Information registerAdmin(RequestAccount.RegisterAdmin registerAdminDto);
+    void registerAdmin(RegisterAdminRequestDto requestDto);
 
-    ResponseAccount.Information getAccountWithAuthorities(String username);
+    AccountInfoResponseDto getAccountWithAuthorities(String username);
 
-    ResponseAccount.Information getMyAccountWithAuthorities();
+    AccountInfoResponseDto getMyAccountWithAuthorities();
 }

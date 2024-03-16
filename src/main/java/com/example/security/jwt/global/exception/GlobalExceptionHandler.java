@@ -23,11 +23,7 @@ public class GlobalExceptionHandler {
                 .code(commonErrorCode.getCode())
                 .build();
 
-        CommonResponse response = CommonResponse.builder()
-                .success(false)
-                .error(error)
-                .build();
-        return new ResponseEntity<>(response, commonErrorCode.getHttpStatus());
+        return new ResponseEntity<>(CommonResponse.fail(error), commonErrorCode.getHttpStatus());
     }
 
     @ExceptionHandler(ApplicationException.class)
@@ -40,11 +36,7 @@ public class GlobalExceptionHandler {
                 .code(errorCode.getCode())
                 .build();
 
-        CommonResponse response = CommonResponse.builder()
-                .success(false)
-                .error(error)
-                .build();
-        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+        return new ResponseEntity<>(CommonResponse.fail(error), errorCode.getHttpStatus());
     }
 
     @ExceptionHandler(InfrastructureException.class)
@@ -57,11 +49,7 @@ public class GlobalExceptionHandler {
                 .code(errorCode.getCode())
                 .build();
 
-        CommonResponse response = CommonResponse.builder()
-                .success(false)
-                .error(error)
-                .build();
-        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+        return new ResponseEntity<>(CommonResponse.fail(error), errorCode.getHttpStatus());
     }
 
     @ExceptionHandler(DomainException.class)
@@ -74,10 +62,6 @@ public class GlobalExceptionHandler {
                 .code(errorCode.getCode())
                 .build();
 
-        CommonResponse response = CommonResponse.builder()
-                .success(false)
-                .error(error)
-                .build();
-        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+        return new ResponseEntity<>(CommonResponse.fail(error), errorCode.getHttpStatus());
     }
 }
