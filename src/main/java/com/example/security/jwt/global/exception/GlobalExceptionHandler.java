@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
      * Bean Validation에 실패했을 때, 에러메시지를 내보내기 위한 Exception Handler
      */
     @ExceptionHandler(BindException.class)
-    protected ResponseEntity<CommonResponse> handleParamViolationException(BindException ex) {
+    protected ResponseEntity<CommonResponse<ErrorResponse>> handleParamViolationException(BindException ex) {
         // 파라미터 validation에 걸렸을 경우
         CommonErrorCode commonErrorCode = CommonErrorCode.REQUEST_PARAMETER_BIND_FAILED;
 
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ApplicationException.class)
-    protected ResponseEntity<CommonResponse> handleApplicationException(ApplicationException ex) {
+    protected ResponseEntity<CommonResponse<ErrorResponse>> handleApplicationException(ApplicationException ex) {
         BaseErrorCode errorCode = ex.getErrorCode();
 
         ErrorResponse error = ErrorResponse.builder()
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InfrastructureException.class)
-    protected ResponseEntity<CommonResponse> handleInfrastructureException(InfrastructureException ex) {
+    protected ResponseEntity<CommonResponse<ErrorResponse>> handleInfrastructureException(InfrastructureException ex) {
         BaseErrorCode errorCode = ex.getErrorCode();
 
         ErrorResponse error = ErrorResponse.builder()
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DomainException.class)
-    protected ResponseEntity<CommonResponse> handleDomainException(DomainException ex) {
+    protected ResponseEntity<CommonResponse<ErrorResponse>> handleDomainException(DomainException ex) {
         BaseErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
 
         ErrorResponse error = ErrorResponse.builder()

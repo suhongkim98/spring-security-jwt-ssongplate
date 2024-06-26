@@ -45,9 +45,9 @@ public class SecurityConfig {
                                 .requestMatchers("/error").permitAll()
 
                 )
-                .authorizeHttpRequests(registry -> registry // actuator, rest docs 경로, 실무에서는 상황에 따라 적절한 접근제어 필요
-                        .requestMatchers("/actuator/*").permitAll()
-                        .requestMatchers("/docs/*").permitAll()
+                .authorizeHttpRequests(registry ->  // actuator, swagger 경로, 실무에서는 상황에 따라 적절한 접근제어 필요
+                        registry.requestMatchers("/actuator/**").permitAll()
+                                .requestMatchers("/docs/**").permitAll()
                 )
                 .authorizeHttpRequests(registry -> // api path
                     registry.requestMatchers("/api/hello").permitAll()

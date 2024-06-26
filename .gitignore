@@ -36,5 +36,3 @@ out/
 ### VS Code ###
 .vscode/
 
-## 문서화 결과 추적무시
-src/main/resources/static/docs/

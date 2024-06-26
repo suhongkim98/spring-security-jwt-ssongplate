@@ -4,6 +4,12 @@ spring:
   profiles:
     active: local # default profile을 지정한다.
 
+springdoc:
+  api-docs:
+    path: /docs # 해당 경로가서 openapi 추출 가능, /docs/{group}으로 특정 그룹만 추출가능
+  swagger-ui:
+    path: /docs/index.html
+
 # actuator 설정하기
 # actuator 는 생각보다 많은 기능(힙덤프 뜨기, 서버 끄기, 환경변수 출력 등)이 있어 잘못 사용하면 다양한 취약점 노출 가능
 # 실무환경에서는 management 포트나 base-path 를 통해 접근하지 못하도록 접근제어 필요

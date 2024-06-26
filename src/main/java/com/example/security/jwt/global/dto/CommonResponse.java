@@ -7,18 +7,18 @@ import java.util.Date;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record CommonResponse(
+public record CommonResponse<T>(
         String id,
         Date dateTime,
-        Object response,
-        Object error
+        T response,
+        ErrorResponse error
 ) {
     @Builder
     public CommonResponse(
             String id,
             Date dateTime,
-            Object response,
-            Object error
+            T response,
+            ErrorResponse error
     ) {
         this.id = UUID.randomUUID().toString();
         this.dateTime = new Date();
@@ -26,14 +26,14 @@ public record CommonResponse(
         this.error = error;
     }
 
-    public static CommonResponse success(Object response) {
-        return CommonResponse.builder()
+    public static <T> CommonResponse<T> success(T response) {
+        return CommonResponse.<T>builder()
                 .response(response)
                 .build();
     }
 
-    public static CommonResponse fail(ErrorResponse errorResponse) {
-        return CommonResponse.builder()
+    public static CommonResponse<ErrorResponse> fail(ErrorResponse errorResponse) {
+        return CommonResponse.<ErrorResponse>builder()
                 .error(errorResponse)
                 .build();
     }

@@ -1,9 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.3'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
-    id 'com.epages.restdocs-api-spec' version '0.18.2'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 repositories {
@@ -24,31 +22,7 @@ configurations {
     }
 }
 
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-asciidoctor {
-    dependsOn test
-    attributes 'snippets': snippetsDir
-    inputs.dir snippetsDir
-}
-
-asciidoctor.doFirst {
-    println("---------------- delete present asciidoctor.")
-    delete file('src/main/resources/static/docs')
-}
-
-bootJar {
-    dependsOn asciidoctor
-    copy {
-        from "${asciidoctor.outputDir}"
-        into 'src/main/resources/static/docs'
-    }
-}
-
 test {
-    outputs.dir snippetsDir
     useJUnitPlatform()
 }
 
@@ -69,5 +43,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }

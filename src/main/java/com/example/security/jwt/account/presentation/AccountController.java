@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
-public class AccountController {
+public class AccountController implements AccountApi {
 
     private final AccountService accountService;
 
@@ -24,32 +24,31 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/token") // Account 인증 API
-    public ResponseEntity<CommonResponse> authorize(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
+    @Override
+    @PostMapping("/token")
+    public ResponseEntity<CommonResponse<TokenResponseDto>> authorize(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
         TokenResponseDto token = accountService.authenticate(tokenRequestDto.username(), tokenRequestDto.password());
 
-        // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         return new ResponseEntity<>(CommonResponse.success(token), httpHeaders, HttpStatus.OK);
     }
 
-    @PutMapping("/token") // 리프레시 토큰을 활용한 액세스 토큰 갱신
-    public ResponseEntity<CommonResponse> refreshToken(@Valid @RequestBody RefreshTokenRequestDto requestDto) {
+    @Override
+    @PutMapping("/token")
+    public ResponseEntity<CommonResponse<TokenResponseDto>> refreshToken(@Valid @RequestBody RefreshTokenRequestDto requestDto) {
         TokenResponseDto token = accountService.refreshToken(requestDto.token());
 
-        // response header 에도 넣고 응답 객체에도 넣는다.
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
 
         return new ResponseEntity<>(CommonResponse.success(token), httpHeaders, HttpStatus.OK);
     }
 
-    //리프레시토큰 만료 API
-    //-> 해당 계정의 가중치를 1 올린다. 그럼 나중에 해당 리프레시 토큰으로 갱신 요청이 들어와도 받아들여지지 않음
+    @Override
     @DeleteMapping("/{username}/token")
-    @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> authorize(@PathVariable(name = "username") String username) {
         accountService.invalidateRefreshTokenByUsername(username);
         return ResponseEntity.noContent()

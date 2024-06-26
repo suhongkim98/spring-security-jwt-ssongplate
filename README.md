@@ -2,7 +2,6 @@
 
 본 프로젝트는 `Java 21`, `Spring Boot 3.x` 기준으로 개발하였습니다.<br/>
 `Spring Security` + `JWT`를 활용한 인증 인가 템플릿입니다.<br/>
-`spring REST Docs`를 통해 API 문서화가 되어있습니다.<br/>
 `flyway` DB 마이그레이션 도구를 사용합니다.<br/>
 소프트웨어 아키텍처로 `레이어드 아키텍처`를 사용합니다.
 
@@ -16,9 +15,13 @@
 ```bash
 java -Dserver.port=8080 -jar build/libs/jwt-0.0.1-SNAPSHOT.jar
 ```
-### spring REST Docs 접속
+### Swagger 접속
 ```
-http://localhost:8080/docs/index.html
+http://localhost:8080/docs/swagger-ui/index.html
+```
+#### openapi spec 추출
+```
+http://localhost:8080/docs
 ```
 
 ### 일반 유저 등록 API

@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
-public class MemberController {
+public class MemberController implements MemberApi {
 
     private final MemberFacadeService memberFacadeService;
 
@@ -17,7 +17,7 @@ public class MemberController {
         this.memberFacadeService = memberFacadeService;
     }
 
-    // user 등록 API
+    @Override
     @PostMapping("/members")
     public ResponseEntity<Void> signup(
             @Valid @RequestBody RegisterMemberFacadeRequestDto requestDto
