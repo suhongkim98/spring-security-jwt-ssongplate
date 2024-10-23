@@ -1,5 +1,6 @@
 package com.example.security.jwt.account.presentation;
 
+import com.example.security.jwt.account.application.dto.TokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenResponseDto;
 import com.example.security.jwt.admin.application.dto.RegisterAdminFacadeRequestDto;
 import com.example.security.jwt.admin.application.AdminFacadeService;
@@ -85,7 +86,10 @@ public class AccountControllerIntegrationTest
     @DisplayName("액세스 토큰 갱신 테스트")
     void refreshTokenTest() throws Exception {
         // given
-        TokenResponseDto token = accountService.authenticate("dusik", "dusikpassword");
+        TokenResponseDto token = accountService.authenticate(TokenRequestDto.builder()
+                        .username("dusik")
+                        .password("dusikpassword")
+                .build());
         Map<String, Object> input = new HashMap<>();
         input.put("token", token.refreshToken());
 
@@ -103,7 +107,10 @@ public class AccountControllerIntegrationTest
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        TokenResponseDto token = accountService.authenticate("honghong", "hongpassword");
+        TokenResponseDto token = accountService.authenticate(TokenRequestDto.builder()
+                        .username("honghong")
+                        .password("hongpassword")
+                .build());
         String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
         ResultActions actions = mockMvc.perform(delete("/api/v1/accounts/{username}/token", targetUsername)

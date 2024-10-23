@@ -14,7 +14,6 @@ public class AdminFacadeServiceImpl implements AdminFacadeService {
 
     private final AccountService accountService;
 
-    // 회원가입 메서드
     @Override
     @Transactional
     public void signup(RegisterAdminFacadeRequestDto requestDto) {

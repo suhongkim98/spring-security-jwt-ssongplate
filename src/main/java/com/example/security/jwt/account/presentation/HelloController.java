@@ -4,15 +4,16 @@ import com.example.security.jwt.account.application.AccountService;
 import com.example.security.jwt.account.application.dto.AccountInfoResponseDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -33,18 +34,17 @@ public class HelloController {
 
     // 인가 테스트
     // Authorization: Bearer {AccessToken}
-    // @AuthenticationPrincipal를 통해 JwtFilter에서 토큰을 검증하며 등록한 시큐리티 유저 객체를 꺼내올 수 있다.
-    // JwtFilter는 디비 조회를 하지 않기에 유저네임, 권한만 알 수 있음
-    // Account 엔티티에 대한 정보를 알고 싶으면 당연 디비 조회를 별도로 해야함
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('MEMBER','ADMIN')") // USER, ADMIN 권한 둘 다 호출 허용
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_MEMBER') or hasAuthority('SCOPE_ROLE_ADMIN')")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<AccountInfoResponseDto> getMyUserInfo(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(accountService.getMyAccountWithAuthorities());
+    public ResponseEntity<AccountInfoResponseDto> getMyUserInfo(Authentication authentication) {
+        log.info(authentication.getName());
+        log.info(authentication.getAuthorities().toString());
+        return ResponseEntity.ok(accountService.getAccountWithAuthorities(authentication.getName()));
     }
 
     @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')") // ADMIN 권한만 호출 가능
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')") // ADMIN 권한만 호출 가능
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<AccountInfoResponseDto> getUserInfo(@PathVariable(name = "username") String username) {
         return ResponseEntity.ok(accountService.getAccountWithAuthorities(username));

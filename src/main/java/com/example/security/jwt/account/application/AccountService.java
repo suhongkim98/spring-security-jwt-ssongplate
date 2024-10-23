@@ -1,13 +1,10 @@
 package com.example.security.jwt.account.application;
 
-import com.example.security.jwt.account.application.dto.AccountInfoResponseDto;
-import com.example.security.jwt.account.application.dto.RegisterAdminRequestDto;
-import com.example.security.jwt.account.application.dto.RegisterMemberRequestDto;
-import com.example.security.jwt.account.application.dto.TokenResponseDto;
+import com.example.security.jwt.account.application.dto.*;
 
 public interface AccountService {
 
-    TokenResponseDto authenticate(String username, String password);
+    TokenResponseDto authenticate(TokenRequestDto tokenRequestDto);
 
     TokenResponseDto refreshToken(String refreshToken);
 
@@ -18,6 +15,4 @@ public interface AccountService {
     void registerAdmin(RegisterAdminRequestDto requestDto);
 
     AccountInfoResponseDto getAccountWithAuthorities(String username);
-
-    AccountInfoResponseDto getMyAccountWithAuthorities();
 }

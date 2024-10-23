@@ -4,8 +4,8 @@ import com.example.security.jwt.account.application.dto.RefreshTokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenResponseDto;
 import com.example.security.jwt.global.dto.CommonResponse;
-import com.example.security.jwt.global.security.CustomJwtFilter;
 import com.example.security.jwt.account.application.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,22 +15,19 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/accounts")
 public class AccountController implements AccountApi {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
     @Override
     @PostMapping("/token")
     public ResponseEntity<CommonResponse<TokenResponseDto>> authorize(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
-        TokenResponseDto token = accountService.authenticate(tokenRequestDto.username(), tokenRequestDto.password());
+        TokenResponseDto token = accountService.authenticate(tokenRequestDto);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
+        httpHeaders.add("Authorization", "Bearer " + token.accessToken());
 
         return new ResponseEntity<>(CommonResponse.success(token), httpHeaders, HttpStatus.OK);
     }
@@ -41,14 +38,14 @@ public class AccountController implements AccountApi {
         TokenResponseDto token = accountService.refreshToken(requestDto.token());
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(CustomJwtFilter.AUTHORIZATION_HEADER, "Bearer " + token.accessToken());
+        httpHeaders.add("Authorization", "Bearer " + token.accessToken());
 
         return new ResponseEntity<>(CommonResponse.success(token), httpHeaders, HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/{username}/token")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<Void> authorize(@PathVariable(name = "username") String username) {
         accountService.invalidateRefreshTokenByUsername(username);
         return ResponseEntity.noContent()

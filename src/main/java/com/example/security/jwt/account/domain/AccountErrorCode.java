@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum AccountErrorCode implements BaseErrorCode {
-    INVALID_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "ACCOUNT_001", "리프레시 토큰이 유효하지 않습니다"),
+
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "ACCOUNT_001", "리프레시 토큰이 유효하지 않습니다"),
+    NOT_FOUND_ACCOUNT(HttpStatus.NOT_FOUND, "ACCOUNT_002", "계정을 찾을 수 없습니다"),
+    ACCOUNT_DEACTIVATED(HttpStatus.FORBIDDEN, "ACCOUNT_003", "비활성화된 계정입니다"),
     ;
 
     private final HttpStatus httpStatus;
