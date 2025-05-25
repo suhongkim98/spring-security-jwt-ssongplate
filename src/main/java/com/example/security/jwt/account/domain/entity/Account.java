@@ -39,7 +39,8 @@ public class Account {
     private Set<Authority> authorities;
 
     @Builder
-    public Account(String username, String password, String nickname, Set<Authority> authorities, boolean activated) {
+    public Account(Long id, String username, String password, String nickname, Set<Authority> authorities, boolean activated) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
