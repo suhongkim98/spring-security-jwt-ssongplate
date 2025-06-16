@@ -6,12 +6,12 @@ CREATE TABLE account (
     token_weight BIGINT,
     nickname VARCHAR(127),
     activated BOOLEAN
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /* authority 스키마 */
 CREATE TABLE authority (
     authority_name VARCHAR(127) NOT NULL PRIMARY KEY
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /* 다대다표현 account_authority 스키마 */
 CREATE TABLE account_authority (
@@ -19,7 +19,7 @@ CREATE TABLE account_authority (
     authority_name VARCHAR(127) NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account (account_id),
     FOREIGN KEY (authority_name) REFERENCES authority (authority_name)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /* 초기 필수 권한 */
 INSERT INTO AUTHORITY (AUTHORITY_NAME) values ('ROLE_MEMBER');
