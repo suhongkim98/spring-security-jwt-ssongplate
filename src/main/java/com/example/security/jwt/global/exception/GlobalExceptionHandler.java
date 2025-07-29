@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DomainException.class)
     protected ResponseEntity<CommonResponse<ErrorResponse>> handleDomainException(DomainException ex) {
-        BaseErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
+        BaseErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
 
         ErrorResponse error = ErrorResponse.builder()
                 .status(errorCode.getHttpStatus().value())

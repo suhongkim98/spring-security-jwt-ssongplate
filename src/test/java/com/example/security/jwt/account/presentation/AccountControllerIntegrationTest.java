@@ -2,9 +2,8 @@ package com.example.security.jwt.account.presentation;
 
 import com.example.security.jwt.account.application.dto.TokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenResponseDto;
-import com.example.security.jwt.admin.application.dto.RegisterAdminFacadeRequestDto;
-import com.example.security.jwt.admin.application.AdminFacadeService;
-import com.example.security.jwt.account.application.AccountService;
+import com.example.security.jwt.account.application.AccountFacadeService;
+import com.example.security.jwt.account.domain.AccountDomainService;
 import com.example.security.jwt.member.application.dto.RegisterMemberFacadeRequestDto;
 import com.example.security.jwt.member.application.MemberFacadeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,9 +40,9 @@ public class AccountControllerIntegrationTest
     @Autowired
     private MemberFacadeService memberFacadeService;
     @Autowired
-    private AccountService accountService;
+    private AccountFacadeService accountFacadeService;
     @Autowired
-    private AdminFacadeService adminFacadeService;
+    private AccountDomainService accountDomainService;
 
     @BeforeAll
     void beforeAll() {
@@ -58,11 +57,7 @@ public class AccountControllerIntegrationTest
                 .username("dusik")
                 .password("dusikpassword")
                 .build());
-        adminFacadeService.signup(RegisterAdminFacadeRequestDto.builder()
-                        .nickname("나야어드민")
-                        .username("honghong")
-                        .password("hongpassword")
-                .build());
+        accountDomainService.createAdminAccount("honghong", "hongpassword", "나야어드민");
     }
 
     @Test
@@ -86,7 +81,7 @@ public class AccountControllerIntegrationTest
     @DisplayName("액세스 토큰 갱신 테스트")
     void refreshTokenTest() throws Exception {
         // given
-        TokenResponseDto token = accountService.authenticate(TokenRequestDto.builder()
+        TokenResponseDto token = accountFacadeService.authenticate(TokenRequestDto.builder()
                         .username("dusik")
                         .password("dusikpassword")
                 .build());
@@ -107,7 +102,7 @@ public class AccountControllerIntegrationTest
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        TokenResponseDto token = accountService.authenticate(TokenRequestDto.builder()
+        TokenResponseDto token = accountFacadeService.authenticate(TokenRequestDto.builder()
                         .username("honghong")
                         .password("hongpassword")
                 .build());

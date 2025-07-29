@@ -4,7 +4,7 @@ import com.example.security.jwt.account.application.dto.RefreshTokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenResponseDto;
 import com.example.security.jwt.global.dto.CommonResponse;
-import com.example.security.jwt.account.application.AccountService;
+import com.example.security.jwt.account.application.AccountFacadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/accounts")
 public class AccountController implements AccountApi {
 
-    private final AccountService accountService;
+    private final AccountFacadeService accountFacadeService;
 
     @Override
     @PostMapping("/token")
     public ResponseEntity<CommonResponse<TokenResponseDto>> authorize(@Valid @RequestBody TokenRequestDto tokenRequestDto) {
-        TokenResponseDto token = accountService.authenticate(tokenRequestDto);
+        TokenResponseDto token = accountFacadeService.authenticate(tokenRequestDto);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + token.accessToken());
@@ -35,7 +35,7 @@ public class AccountController implements AccountApi {
     @Override
     @PutMapping("/token")
     public ResponseEntity<CommonResponse<TokenResponseDto>> refreshToken(@Valid @RequestBody RefreshTokenRequestDto requestDto) {
-        TokenResponseDto token = accountService.refreshToken(requestDto.token());
+        TokenResponseDto token = accountFacadeService.refreshToken(requestDto.token());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + token.accessToken());
@@ -47,7 +47,7 @@ public class AccountController implements AccountApi {
     @DeleteMapping("/{username}/token")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<Void> authorize(@PathVariable(name = "username") String username) {
-        accountService.invalidateRefreshTokenByUsername(username);
+        accountFacadeService.invalidateRefreshTokenByUsername(username);
         return ResponseEntity.noContent()
                 .build();
     }

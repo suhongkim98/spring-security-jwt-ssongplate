@@ -1,6 +1,6 @@
 package com.example.security.jwt.account.presentation;
 
-import com.example.security.jwt.account.application.AccountService;
+import com.example.security.jwt.account.application.AccountFacadeService;
 import com.example.security.jwt.account.application.dto.AccountInfoResponseDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class HelloController {
 
-    private final AccountService accountService;
+    private final AccountFacadeService accountFacadeService;
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
@@ -40,13 +40,13 @@ public class HelloController {
     public ResponseEntity<AccountInfoResponseDto> getMyUserInfo(Authentication authentication) {
         log.info(authentication.getName());
         log.info(authentication.getAuthorities().toString());
-        return ResponseEntity.ok(accountService.getAccountWithAuthorities(authentication.getName()));
+        return ResponseEntity.ok(accountFacadeService.getAccountWithAuthorities(authentication.getName()));
     }
 
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')") // ADMIN 권한만 호출 가능
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<AccountInfoResponseDto> getUserInfo(@PathVariable(name = "username") String username) {
-        return ResponseEntity.ok(accountService.getAccountWithAuthorities(username));
+        return ResponseEntity.ok(accountFacadeService.getAccountWithAuthorities(username));
     }
 }

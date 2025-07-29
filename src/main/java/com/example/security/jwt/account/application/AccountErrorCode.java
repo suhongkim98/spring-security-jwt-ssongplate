@@ -1,4 +1,4 @@
-package com.example.security.jwt.account.domain;
+package com.example.security.jwt.account.application;
 
 import com.example.security.jwt.global.exception.BaseErrorCode;
 import lombok.AllArgsConstructor;
