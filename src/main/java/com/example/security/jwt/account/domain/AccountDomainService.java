@@ -20,16 +20,18 @@ public class AccountDomainService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Account getOneById(String username) {
-        return findOneById(username).orElseThrow(AccountNotFoundDomainException::new);
+    public Account getOneById(Long accountId) {
+        return accountRepository.findOneWithAuthoritiesById(accountId)
+                .orElseThrow(AccountNotFoundDomainException::new);
     }
 
-    public Optional<Account> findOneById(String username) {
-        return accountRepository.findOneWithAuthoritiesByUsername(username);
+    public Account getOneByUsername(String username) {
+        return accountRepository.findOneWithAuthoritiesByUsername(username)
+                .orElseThrow(AccountNotFoundDomainException::new);
     }
 
     public void createUserAccount(String username, String password, String nickname) {
-        Optional<Account> accountOptional = findOneById(username);
+        Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(username);
 
         if (accountOptional.isPresent()) {
             throw new AccountConflictDomainException();
@@ -52,7 +54,7 @@ public class AccountDomainService {
     }
 
     public void createAdminAccount(String username, String password, String nickname) {
-        Optional<Account> accountOptional = findOneById(username);
+        Optional<Account> accountOptional = accountRepository.findOneWithAuthoritiesByUsername(username);
 
         if (accountOptional.isPresent()) {
             throw new AccountConflictDomainException();

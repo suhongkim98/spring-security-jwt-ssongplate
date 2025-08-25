@@ -3,7 +3,7 @@ package com.example.security.jwt.global.security.jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.*;
 
-import java.time.Instant;;
+import java.time.Instant;
 
 // 리프레시 토큰 생성, 검증
 // TokenProvider 기능을 확장
@@ -24,28 +24,30 @@ public final class RefreshTokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(String username, Long tokenWeight) {
+    public Jwt createToken(Long accountId, Long tokenWeight) {
         Instant now = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(this.tokenValidityInSeconds))
-                .subject(username)
+                .subject(String.valueOf(accountId))
                 .claim(WEIGHT_KEY, tokenWeight)
                 .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims));
+    }
+
+    public Jwt decodeFrom(String token) {
+        return jwtDecoder.decode(token);
     }
 
     // 토큰에서 유저 네임을 꺼내 반환
-    public String getUsername(String token) {
-        Jwt jwt = jwtDecoder.decode(token);
-        return jwt.getSubject();
+    public Long getId(Jwt token) {
+        return Long.parseLong(token.getSubject());
     }
 
-    public long getTokenWeight(String token) {
+    public long getTokenWeight(Jwt jwt) {
         // 토큰에서 가중치를 꺼내 반환한다.
-        Jwt jwt = jwtDecoder.decode(token);
         return Long.parseLong(String.valueOf(jwt.getClaims().get(WEIGHT_KEY)));
     }
 

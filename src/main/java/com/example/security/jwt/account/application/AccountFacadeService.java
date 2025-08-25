@@ -8,7 +8,7 @@ public interface AccountFacadeService {
 
     TokenResponseDto refreshToken(String refreshToken);
 
-    void invalidateRefreshTokenByUsername(String username);
+    void invalidateRefreshTokenById(Long accountId);
 
-    AccountInfoResponseDto getAccountWithAuthorities(String username);
+    AccountInfoResponseDto getAccountWithAuthorities(Long accountId);
 }

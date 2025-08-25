@@ -64,29 +64,28 @@ POST /api/v1/accounts/token
 ```
 {
     username: String,
-    password: String
+    password: String,
 }
 ```
 * `username`과 `password`를 통해 계정 인증
 * 해당 사용자 권한으로 액세스토큰 리프레시 토큰 반환
+  * 리프레시 토큰 Http Only, Secure 쿠키 추가
 
 ## 액세스 토큰, 리프레시 토큰 갱신 API
 ```
 PUT /api/v1/accounts/token
 ```
-### request
+### request header
 ```
-{
-    refreshToken: String
-}
+RT: String
 ```
 * 리프레시 토큰을 검증(유효성, 리프레시 토큰 가중치)
-* 액세스 토큰, 리프레시 토큰 발급
+* 액세스 토큰 발급
 
 ## 리프레시 토큰 무효화 API
 호출자의 `ROLE_ADMIN` 권한 보유여부 확인
 ```
-DELETE /api/v1/accounts/{username}/token
+DELETE /api/v1/accounts/{accountId}/token
 ```
-* 해당 `username`의 토큰 가중치를 1 증가시킴으로써 이전에 발급된 해당 `username`에 대한 모든 리프레시 토큰 무효화
+* 토큰 버저닝 방식으로 해당 `accountId`의 토큰 가중치를 1 증가시킴으로써 이전에 발급된 해당 `accountId`에 대한 모든 리프레시 토큰 무효화
 

@@ -4,6 +4,7 @@ import com.example.security.jwt.account.application.dto.TokenRequestDto;
 import com.example.security.jwt.account.application.dto.TokenResponseDto;
 import com.example.security.jwt.account.application.AccountFacadeService;
 import com.example.security.jwt.account.domain.AccountDomainService;
+import com.example.security.jwt.account.domain.entity.Account;
 import com.example.security.jwt.member.application.dto.RegisterMemberFacadeRequestDto;
 import com.example.security.jwt.member.application.MemberFacadeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,6 +75,8 @@ public class AccountControllerIntegrationTest
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response.accessToken", is(notNullValue())))
                 .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())))
+                .andExpect(jsonPath("$.response.accessTokenExpireAt", is(notNullValue())))
+                .andExpect(jsonPath("$.response.refreshTokenExpireAt", is(notNullValue())))
                 .andDo(print());
     }
 
@@ -85,16 +88,16 @@ public class AccountControllerIntegrationTest
                         .username("dusik")
                         .password("dusikpassword")
                 .build());
-        Map<String, Object> input = new HashMap<>();
-        input.put("token", token.refreshToken());
 
         ResultActions actions = mockMvc.perform(put("/api/v1/accounts/token")
+                        .header("RT", token.refreshToken())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(input))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response.accessToken", is(notNullValue())))
                 .andExpect(jsonPath("$.response.refreshToken", is(notNullValue())))
+                .andExpect(jsonPath("$.response.accessTokenExpireAt", is(notNullValue())))
+                .andExpect(jsonPath("$.response.refreshTokenExpireAt", is(notNullValue())))
                 .andDo(print());
 
     }
@@ -102,14 +105,16 @@ public class AccountControllerIntegrationTest
     @DisplayName("관리자의 사용자 리프레시 토큰 만료 테스트")
     void invalidateRefreshTokenTest() throws Exception {
         // given
-        TokenResponseDto token = accountFacadeService.authenticate(TokenRequestDto.builder()
-                        .username("honghong")
-                        .password("hongpassword")
+        accountDomainService.createUserAccount("delTest1", "delTest2", "aaaaaa");
+        Account deleteTarget = accountDomainService.getOneByUsername("delTest1");
+        TokenResponseDto adminToken = accountFacadeService.authenticate(TokenRequestDto.builder()
+                .username("honghong")
+                .password("hongpassword")
                 .build());
-        String targetUsername = "dusik"; // 두식이 계정 토큰 만료시키기
 
-        ResultActions actions = mockMvc.perform(delete("/api/v1/accounts/{username}/token", targetUsername)
-                        .header("Authorization", "Bearer " + token.accessToken())
+        // when then
+        ResultActions actions = mockMvc.perform(delete("/api/v1/accounts/{accountId}/token", deleteTarget.getId())
+                        .header("Authorization", "Bearer " + adminToken.accessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNoContent())

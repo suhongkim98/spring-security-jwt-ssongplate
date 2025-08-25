@@ -8,5 +8,8 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long>, AccountCustomRepository {
     @EntityGraph(attributePaths = "authorities")
-    Optional<Account> findOneWithAuthoritiesByUsername(String username); // user를 기준으로 유저를 조회할 때 권한정보도 가져온다.
+    Optional<Account> findOneWithAuthoritiesById(Long id);
+
+    @EntityGraph(attributePaths = "authorities")
+    Optional<Account> findOneWithAuthoritiesByUsername(String username);
 }

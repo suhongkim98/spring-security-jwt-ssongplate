@@ -2,6 +2,7 @@ package com.example.security.jwt.global.security.config;
 
 import com.example.security.jwt.global.security.handler.JwtAccessDeniedHandler;
 import com.example.security.jwt.global.security.handler.JwtAuthenticationEntryPoint;
+import com.example.security.jwt.global.security.jwt.CustomJwtAuthenticationConverter;
 import com.example.security.jwt.global.security.jwt.CustomJwtGrantedAuthoritiesConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -64,17 +64,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> registry.anyRequest().authenticated()) // 나머지 경로는 jwt 인증 해야함
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->
                         httpSecurityOAuth2ResourceServerConfigurer.jwt(jwtConfigurer ->
-                                jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                                jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()) // jwtDecoder 는 알아서 참조해감
                         )
                 );
 
         return httpSecurity.build();
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter());
-        return converter;
+    private CustomJwtAuthenticationConverter jwtAuthenticationConverter() {
+        return new CustomJwtAuthenticationConverter(new CustomJwtGrantedAuthoritiesConverter());
     }
 
     private CorsConfigurationSource corsConfigurationSource() {

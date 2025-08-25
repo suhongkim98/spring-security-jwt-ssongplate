@@ -9,6 +9,7 @@ import com.example.security.jwt.global.exception.DomainException;
 import com.example.security.jwt.global.security.jwt.RefreshTokenProvider;
 import com.example.security.jwt.global.security.jwt.AccessTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,25 +29,27 @@ public class AccountFacadeServiceImpl implements AccountFacadeService {
     public TokenResponseDto authenticate(TokenRequestDto tokenRequestDto) {
         Account account;
         try {
-            account = accountDomainService.getOneById(tokenRequestDto.username());
+            account = accountDomainService.getOneByUsername(tokenRequestDto.username());
         } catch (DomainException e) {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }
         if (!accountDomainService.isMatchPassword(tokenRequestDto.password(), account.getPassword())) {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }
-        if(!account.isActivated()) {
+        if (!account.isActivated()) {
             throw new ApplicationException(AccountErrorCode.ACCOUNT_DEACTIVATED);
         }
 
         Set<String> authorities = account.getAuthorities().stream()
                 .map(Authority::getAuthorityName).collect(Collectors.toSet());
-        String accessToken = accessTokenProvider.createToken(account.getUsername(), authorities);
-        String refreshToken = refreshTokenProvider.createToken(account.getUsername(), account.getTokenWeight());
+        Jwt accessToken = accessTokenProvider.createToken(account.getId(), authorities);
+        Jwt refreshToken = refreshTokenProvider.createToken(account.getId(), account.getTokenWeight());
 
         return TokenResponseDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .accessToken(accessToken.getTokenValue())
+                .refreshToken(refreshToken.getTokenValue())
+                .accessTokenExpireAt(accessToken.getExpiresAt())
+                .refreshTokenExpireAt(refreshToken.getExpiresAt())
                 .build();
     }
 
@@ -54,43 +57,47 @@ public class AccountFacadeServiceImpl implements AccountFacadeService {
     @Transactional(readOnly = true)
     public TokenResponseDto refreshToken(String refreshToken) {
         // 먼저 리프레시 토큰을 검증한다.
-        if(!refreshTokenProvider.validateToken(refreshToken)) {
+        if (!refreshTokenProvider.validateToken(refreshToken)) {
             throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
         }
 
+        Jwt decodedToken = refreshTokenProvider.decodeFrom(refreshToken);
+
         // 리프레시 토큰에서 사용자를 꺼낸다.
-        String username = refreshTokenProvider.getUsername(refreshToken);
+        Long accountId  = refreshTokenProvider.getId(decodedToken);
         Account account;
         try {
-            account = accountDomainService.getOneById(username);
+            account = accountDomainService.getOneById(accountId);
         } catch (DomainException e) {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }
 
         // 사용자 디비 값에 있는 것과 가중치 비교, 디비 가중치가 더 크다면 유효하지 않음
-        if(account.getTokenWeight() > refreshTokenProvider.getTokenWeight(refreshToken)) {
+        if (account.getTokenWeight() > refreshTokenProvider.getTokenWeight(decodedToken)) {
             throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // 액세스 토큰 생성
         Set<String> authorities = account.getAuthorities().stream()
                 .map(Authority::getAuthorityName).collect(Collectors.toSet());
-        String accessToken = accessTokenProvider.createToken(account.getUsername(), authorities);
+        Jwt accessToken = accessTokenProvider.createToken(account.getId(), authorities);
 
         // 기존 리프레시 토큰과 새로 만든 액세스 토큰을 반환한다.
         return TokenResponseDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .accessToken(accessToken.getTokenValue())
+                .refreshToken(decodedToken.getTokenValue())
+                .accessTokenExpireAt(accessToken.getExpiresAt())
+                .refreshTokenExpireAt(decodedToken.getExpiresAt())
                 .build();
     }
 
     // Account 가중치를 1 올림으로써 해당 username 리프레시토큰 무효화
     @Override
     @Transactional
-    public void invalidateRefreshTokenByUsername(String username) {
+    public void invalidateRefreshTokenById(Long accountId) {
         Account account;
         try {
-            account = accountDomainService.getOneById(username);
+            account = accountDomainService.getOneById(accountId);
         } catch (DomainException e) {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }
@@ -99,10 +106,10 @@ public class AccountFacadeServiceImpl implements AccountFacadeService {
 
     @Override
     @Transactional(readOnly = true)
-    public AccountInfoResponseDto getAccountWithAuthorities(String username) {
+    public AccountInfoResponseDto getAccountWithAuthorities(Long accountId) {
         Account account;
         try {
-            account = accountDomainService.getOneById(username);
+            account = accountDomainService.getOneById(accountId);
         } catch (DomainException e) {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }

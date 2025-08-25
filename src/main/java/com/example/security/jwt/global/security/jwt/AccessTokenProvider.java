@@ -1,5 +1,6 @@
 package com.example.security.jwt.global.security.jwt;
 
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -20,7 +21,7 @@ public final class AccessTokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(String username, Set<String> authorities) {
+    public Jwt createToken(Long accountId, Set<String> authorities) {
         String strAuthorities = String.join(" ", authorities);
 
         Instant now = Instant.now();
@@ -29,9 +30,9 @@ public final class AccessTokenProvider {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(this.tokenValidityInSeconds))
-                .subject(username)
+                .subject(String.valueOf(accountId))
                 .claim(AUTHORITIES_KEY, strAuthorities)
                 .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims));
     }
 }
