@@ -3,12 +3,18 @@ package com.example.security.jwt.account.domain.entity;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "account")
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Account {
 
     @Id
@@ -30,6 +36,12 @@ public class Account {
 
     @Column(name = "activated")
     private boolean activated;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
 
     @ManyToMany
     @JoinTable(

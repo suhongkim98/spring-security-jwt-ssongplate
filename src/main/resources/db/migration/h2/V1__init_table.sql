@@ -5,12 +5,16 @@ CREATE TABLE account (
     password VARCHAR(255),
     token_weight BIGINT,
     nickname VARCHAR(127),
-    activated BOOLEAN
+    activated BOOLEAN,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /* authority 스키마 */
 CREATE TABLE authority (
-    authority_name VARCHAR(127) NOT NULL PRIMARY KEY
+    authority_name VARCHAR(127) NOT NULL PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /* 다대다표현 account_authority 스키마 */

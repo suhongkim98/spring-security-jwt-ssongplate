@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,6 +74,10 @@ public class AccountFacadeServiceImpl implements AccountFacadeService {
             throw new ApplicationException(AccountErrorCode.NOT_FOUND_ACCOUNT);
         }
 
+        if (!account.isActivated()) {
+            throw new ApplicationException(AccountErrorCode.ACCOUNT_DEACTIVATED);
+        }
+
         // 사용자 디비 값에 있는 것과 가중치 비교, 디비 가중치가 더 크다면 유효하지 않음
         if (account.getTokenWeight() > refreshTokenProvider.getTokenWeight(decodedToken)) {
             throw new ApplicationException(AccountErrorCode.INVALID_REFRESH_TOKEN);
@@ -82,12 +88,19 @@ public class AccountFacadeServiceImpl implements AccountFacadeService {
                 .map(Authority::getAuthorityName).collect(Collectors.toSet());
         Jwt accessToken = accessTokenProvider.createToken(account.getId(), authorities);
 
-        // 기존 리프레시 토큰과 새로 만든 액세스 토큰을 반환한다.
+        // 리프레시 토큰 갱신
+        Jwt targetRefreshToken;
+        if (Duration.between(Instant.now(), decodedToken.getExpiresAt()).getSeconds() < 3600) {
+            targetRefreshToken = refreshTokenProvider.createToken(account.getId(), account.getTokenWeight());
+        } else {
+            targetRefreshToken = decodedToken;
+        }
+
         return TokenResponseDto.builder()
                 .accessToken(accessToken.getTokenValue())
-                .refreshToken(decodedToken.getTokenValue())
+                .refreshToken(targetRefreshToken.getTokenValue())
                 .accessTokenExpireAt(accessToken.getExpiresAt())
-                .refreshTokenExpireAt(decodedToken.getExpiresAt())
+                .refreshTokenExpireAt(targetRefreshToken.getExpiresAt())
                 .build();
     }
 
