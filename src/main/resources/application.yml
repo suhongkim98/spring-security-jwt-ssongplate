@@ -19,12 +19,13 @@ management:
 
   endpoint: # 종류: https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
     info:
-      enabled: true
+      access: read_only
     health:
-      enabled: true
+      access: read_only
 
   endpoints:
-    enabled-by-default: false # 활성화 상태를 기본값으로 false로 만들고, 필요한 endpoint를 enable해서 사용
+    access:
+      default: none
     jmx:
       exposure: # 필요한 endpoint만 노출해서 사용
         exclude: "*"
