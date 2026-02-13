@@ -26,6 +26,9 @@ public interface MemberApi {
     @Operation(tags = {"Member"}, summary = "멤버 생성", description = """
             ## API 설명
             멤버를 생성합니다.
+            
+            * ROLE_MEMBER 권한을 부여하여 Account 생성
+            * 리프레시 토큰의 초기 가중치는 1로 설정
             """)
     @ApiResponses(value = {
             @ApiResponse(

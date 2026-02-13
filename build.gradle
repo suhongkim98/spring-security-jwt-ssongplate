@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.4'
+    id 'org.springframework.boot' version '4.0.2'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -37,12 +37,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // flyway 를 사용하는 경우 추가
-    implementation 'org.flywaydb:flyway-core:11.10.4'
     runtimeOnly 'com.h2database:h2'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+    // for swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
 }

@@ -2,16 +2,16 @@ package com.example.security.jwt.global.security.handler;
 
 import com.example.security.jwt.global.dto.CommonResponse;
 import com.example.security.jwt.global.dto.ErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import tools.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 
 // 인증 실패 시
